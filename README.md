@@ -1,7 +1,7 @@
 #  MCP server for all Laravel projects - better AI pair programming, coming soon..
 
 <p align="center">
-<img src="croft-boot-bg.png" width=180 height=180/>
+<img src="croft-boot-bg2.png" width=180 height=180/>
 </p>
 
 
