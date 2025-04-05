@@ -27,7 +27,9 @@ To make use of Croft you need to add it as an MCP server in your favourite tool.
 The command the MCP client needs to run it `./artisan croft`
 
 **Cursor** ([Docs](https://docs.cursor.com/context/model-context-protocol#configuring-mcp-servers))
-Recommend mcp.json file shipped with the project: `.cursor/mcp.json`
+
+We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
+
 ```json
 {
   "mcpServers": {
