@@ -6,8 +6,8 @@ namespace Croft\Tools;
 
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseListTables extends AbstractTool
 {
@@ -52,7 +52,6 @@ class DatabaseListTables extends AbstractTool
         return ToolResponse::array($structure);
     }
 
-
     public function getAllTables()
     {
         return Schema::getTables();
@@ -71,9 +70,9 @@ class DatabaseListTables extends AbstractTool
                 'foreign_keys' => $foreignKeys,
             ];
         } catch (\Exception $e) {
-            \Log::error('Failed to get table structure for: ' . $tableName, [
+            \Log::error('Failed to get table structure for: '.$tableName, [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
             throw $e; // Re-throw to notify the caller
         }
@@ -87,7 +86,7 @@ class DatabaseListTables extends AbstractTool
             $tableName = $table['name'];
 
             // Skip tables that don't match the filter
-            if ($filter && !str_contains(strtolower($tableName), strtolower($filter))) {
+            if ($filter && ! str_contains(strtolower($tableName), strtolower($filter))) {
                 continue;
             }
 
