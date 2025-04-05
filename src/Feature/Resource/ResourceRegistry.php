@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Croft\Feature\Resource;
 
-use Croft\Exceptions\ProtocolException;
 use Croft\Exceptions\ResourceNotFoundException;
 use Croft\Feature\AbstractRegistry;
-use Croft\Protocol\JsonRpc;
 
 /**
  * Registry for MCP resources
@@ -40,7 +38,6 @@ class ResourceRegistry extends AbstractRegistry
 
         return $this->items[$uri];
     }
-
 
     /**
      * Get schemas for all registered items

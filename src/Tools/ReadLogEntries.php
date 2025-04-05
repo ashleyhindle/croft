@@ -56,6 +56,7 @@ class ReadLogEntries extends AbstractTool
 
     /**
      * Read lines from the end of a file
+     *
      * @return \Generator<string>
      */
     private function readLinesReverse($file): \Generator
@@ -104,17 +105,17 @@ class ReadLogEntries extends AbstractTool
         $channelConfig = Config::get("logging.channels.{$channel}");
 
         if ($channelConfig['driver'] === 'daily') {
-            $logFile = storage_path('logs/laravel-' . date('Y-m-d') . '.log');
+            $logFile = storage_path('logs/laravel-'.date('Y-m-d').'.log');
         } else {
             $logFile = storage_path('logs/laravel.log');
         }
 
-        if (!file_exists($logFile)) {
+        if (! file_exists($logFile)) {
             return ToolResponse::error('Log file not found');
         }
 
         $file = fopen($logFile, 'r');
-        if (!$file) {
+        if (! $file) {
             return ToolResponse::error('Could not open log file');
         }
 
@@ -129,12 +130,11 @@ class ReadLogEntries extends AbstractTool
                     continue;
                 }
 
-
                 // Add line to current entry
                 array_unshift($currentEntry, $line);
 
                 // If this is a new entry and we have lines collected
-                if ($this->isNewLogEntry($line) && !empty($currentEntry)) {
+                if ($this->isNewLogEntry($line) && ! empty($currentEntry)) {
                     // Save the completed entry
                     array_unshift($logEntries, implode("\n", $currentEntry));
                     $entryCount++;
@@ -150,7 +150,7 @@ class ReadLogEntries extends AbstractTool
             }
 
             // Add any remaining lines as the final entry
-            if (!empty($currentEntry)) {
+            if (! empty($currentEntry)) {
                 array_unshift($logEntries, implode("\n", $currentEntry));
             }
 

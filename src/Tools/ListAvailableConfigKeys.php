@@ -34,7 +34,7 @@ class ListAvailableConfigKeys extends AbstractTool
     {
         return [
             'type' => 'object',
-            'properties' => (object)[
+            'properties' => (object) [
             ],
             'required' => [],
         ];
@@ -45,6 +45,7 @@ class ListAvailableConfigKeys extends AbstractTool
         $configKeys = Config::all();
         $dotKeys = $this->flattenToDotNotation($configKeys);
         sort($dotKeys);
+
         return ToolResponse::array($dotKeys);
     }
 
@@ -55,12 +56,13 @@ class ListAvailableConfigKeys extends AbstractTool
             if (is_array($value)) {
                 $results = array_merge(
                     $results,
-                    $this->flattenToDotNotation($value, $prepend . $key . '.')
+                    $this->flattenToDotNotation($value, $prepend.$key.'.')
                 );
             } else {
-                $results[] = $prepend . $key;
+                $results[] = $prepend.$key;
             }
         }
+
         return $results;
     }
 }

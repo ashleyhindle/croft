@@ -26,12 +26,12 @@ abstract class AbstractRegistry
      */
     public function register(object $item): self
     {
-        if (!$this->validateItem($item)) {
-            throw new \InvalidArgumentException('Invalid item provided to register: ' . get_class($item));
+        if (! $this->validateItem($item)) {
+            throw new \InvalidArgumentException('Invalid item provided to register: '.get_class($item));
         }
 
         if (array_key_exists($item->getName(), $this->items)) {
-            throw new \InvalidArgumentException('Item with name ' . $item->getName() . ' already registered');
+            throw new \InvalidArgumentException('Item with name '.$item->getName().' already registered');
         }
 
         $this->items[$item->getName()] = $item;

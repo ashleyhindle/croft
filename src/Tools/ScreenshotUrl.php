@@ -35,7 +35,7 @@ class ScreenshotUrl extends AbstractTool
     {
         return [
             'type' => 'object',
-            'properties' => (object)[
+            'properties' => (object) [
                 'path' => [
                     'type' => 'string',
                     'description' => 'The relative application path to take a screenshot of (e.g., /users, /posts/1).',
@@ -58,7 +58,7 @@ class ScreenshotUrl extends AbstractTool
     public function handle(array $arguments): ToolResponse
     {
         // Check if the suggested package class exists
-        if (!class_exists(Browsershot::class)) {
+        if (! class_exists(Browsershot::class)) {
             return ToolResponse::error(
                 'Browsershot package not installed. Please run "composer require spatie/browsershot" and ensure Node/Puppeteer are installed to use this tool.'
             );
@@ -75,44 +75,44 @@ class ScreenshotUrl extends AbstractTool
         }
 
         // Ensure path starts with a slash
-        if (!str_starts_with($relativePath, '/')) {
-            $relativePath = '/' . $relativePath;
+        if (! str_starts_with($relativePath, '/')) {
+            $relativePath = '/'.$relativePath;
         }
 
         // Construct the full URL
-        $fullUrl = rtrim($baseUrl, '/') . $relativePath;
+        $fullUrl = rtrim($baseUrl, '/').$relativePath;
 
         // Basic URL validation (on the constructed URL)
-        if (!filter_var($fullUrl, FILTER_VALIDATE_URL)) {
+        if (! filter_var($fullUrl, FILTER_VALIDATE_URL)) {
             return ToolResponse::error("Constructed URL '{$fullUrl}' is invalid.");
         }
 
         try {
             // Create a temporary file with .png extension
-            $tempFile = tempnam(sys_get_temp_dir(), 'screenshot_') . '.png';
+            $tempFile = tempnam(sys_get_temp_dir(), 'screenshot_').'.png';
 
             Browsershot::url($fullUrl)
                 ->windowSize($width, $height)
                 ->ignoreHttpsErrors()
                 ->save($tempFile);
 
-            if (!file_exists($tempFile)) {
+            if (! file_exists($tempFile)) {
                 return ToolResponse::error("Failed to save screenshot for path '{$relativePath}'.");
             }
 
             // Open the file with the system's default application
             if (PHP_OS === 'Darwin') {
-                exec('open ' . escapeshellarg($tempFile) . ' > /dev/null 2>&1 &');
+                exec('open '.escapeshellarg($tempFile).' > /dev/null 2>&1 &');
             } elseif (PHP_OS === 'Linux') {
-                exec('xdg-open ' . escapeshellarg($tempFile) . ' > /dev/null 2>&1 &');
+                exec('xdg-open '.escapeshellarg($tempFile).' > /dev/null 2>&1 &');
             } elseif (PHP_OS === 'WINNT') {
-                exec('start ' . escapeshellarg($tempFile) . ' > NUL 2>&1');
+                exec('start '.escapeshellarg($tempFile).' > NUL 2>&1');
             }
 
-            return ToolResponse::text("Screenshot has been saved and should now be open in your default image viewer.");
+            return ToolResponse::text('Screenshot has been saved and should now be open in your default image viewer.');
 
         } catch (\Exception $e) {
-            return ToolResponse::error("Screenshot failed for path '{$relativePath}': " . $e->getMessage());
+            return ToolResponse::error("Screenshot failed for path '{$relativePath}': ".$e->getMessage());
         }
     }
 }

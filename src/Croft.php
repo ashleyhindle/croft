@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Croft;
 
-class Croft {
-
-}
+class Croft {}

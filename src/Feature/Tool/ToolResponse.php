@@ -7,6 +7,7 @@ namespace Croft\Feature\Tool;
 class ToolResponse
 {
     private array $contentBlock;
+
     private bool $errored = false;
 
     private function __construct(array $contentBlock, bool $errored = false)
@@ -38,6 +39,7 @@ class ToolResponse
         if ($caption !== null) {
             $content['caption'] = $caption;
         }
+
         return new self($content);
     }
 
@@ -50,7 +52,7 @@ class ToolResponse
     public function toArray(): array
     {
         return [
-            'content' => [$this->contentBlock]
+            'content' => [$this->contentBlock],
         ];
     }
 }

@@ -110,7 +110,7 @@ class Server
             'tool',
             function ($tool) {
                 $this->toolRegistry->register($tool);
-                $this->log('Registered tool: ' . $tool->getName());
+                $this->log('Registered tool: '.$tool->getName());
             }
         );
 
@@ -156,7 +156,7 @@ class Server
             'prompt',
             function ($prompt) {
                 $this->promptRegistry->register($prompt);
-                $this->log('Registered prompt: ' . $prompt->getName());
+                $this->log('Registered prompt: '.$prompt->getName());
             }
         );
 
@@ -203,7 +203,7 @@ class Server
             'resource',
             function ($resource) {
                 $this->resourceRegistry->register($resource);
-                $this->log('Registered resource: ' . $resource->getUri());
+                $this->log('Registered resource: '.$resource->getUri());
             }
         );
 
@@ -215,7 +215,7 @@ class Server
             'resource template',
             function ($template) {
                 $this->resourceTemplateRegistry->register($template);
-                $this->log('Registered resource template: ' . $template->getUriTemplate());
+                $this->log('Registered resource template: '.$template->getUriTemplate());
             }
         );
 
@@ -270,11 +270,11 @@ class Server
     {
         switch ($signo) {
             case SIGINT:
-                $this->log(PHP_EOL . 'SIGINT received, shutting down...');
+                $this->log(PHP_EOL.'SIGINT received, shutting down...');
                 exit(0);
                 break;
             case SIGTERM:
-                $this->log(PHP_EOL . 'SIGTERM received, shutting down...');
+                $this->log(PHP_EOL.'SIGTERM received, shutting down...');
                 exit(0);
                 break;
         }
@@ -334,7 +334,7 @@ class Server
                 $errorResponse = JsonRpc::error(
                     'unknown',
                     JsonRpc::INTERNAL_ERROR,
-                    'Internal server error: ' . $e->getMessage()
+                    'Internal server error: '.$e->getMessage()
                 );
                 $this->transport->write(JsonRpc::stringify($errorResponse));
             }
@@ -382,7 +382,7 @@ class Server
                 ),
             };
 
-            $this->log('Sent response: ' . json_encode($response));
+            $this->log('Sent response: '.json_encode($response));
             $result = $this->transport->write(JsonRpc::stringify($response));
             $this->log("Result: $result");
         } catch (ProtocolException $e) {
@@ -449,7 +449,7 @@ class Server
         }
 
         $this->initialized = true;
-        $this->log('Sending initialization response: ' . json_encode($result));
+        $this->log('Sending initialization response: '.json_encode($result));
 
         return Response::result($id, $result);
     }
@@ -480,7 +480,7 @@ class Server
 
         // TODO: Check rate limits if configured
         // if (isset($annotations['rateLimit'])) {
-            // $this->checkRateLimit($toolName, $annotations['rateLimit']);
+        // $this->checkRateLimit($toolName, $annotations['rateLimit']);
         // }
 
         // Validate arguments against schema
@@ -510,7 +510,7 @@ class Server
                 'content' => [
                     [
                         'type' => 'text',
-                        'text' => 'Error executing tool: ' . $e->getMessage(),
+                        'text' => 'Error executing tool: '.$e->getMessage(),
                     ],
                 ],
                 'isError' => true,
@@ -582,7 +582,7 @@ class Server
             throw $e;
         } catch (\Exception $e) {
             throw new ProtocolException(
-                'Error rendering prompt: ' . $e->getMessage(),
+                'Error rendering prompt: '.$e->getMessage(),
                 JsonRpc::INTERNAL_ERROR
             );
         }
@@ -705,7 +705,7 @@ class Server
         }
 
         // Generate a unique ID for this ping
-        $pingId = 'ping-' . uniqid();
+        $pingId = 'ping-'.uniqid();
 
         // Create ping request
         $pingRequest = new Request($pingId, 'ping');
@@ -739,7 +739,7 @@ class Server
                         $this->handleNotification($message);
                     }
                 } catch (ProtocolException $e) {
-                    $this->log('Error parsing message during ping: ' . $e->getMessage());
+                    $this->log('Error parsing message during ping: '.$e->getMessage());
                 }
             }
 
@@ -813,7 +813,7 @@ class Server
         $this->log("Loading {$type}s from directory: $directory");
 
         // Get all PHP files in the directory
-        $phpFiles = glob($directory . '/*.php');
+        $phpFiles = glob($directory.'/*.php');
 
         if (empty($phpFiles)) {
             $this->log("No PHP files found in $directory");
@@ -828,7 +828,7 @@ class Server
             $className = pathinfo($file, PATHINFO_FILENAME);
 
             // Build fully qualified class name with namespace if provided
-            $fqcn = $namespace ? $namespace . '\\' . $className : $className;
+            $fqcn = $namespace ? $namespace.'\\'.$className : $className;
 
             try {
                 // Check if the file contains a class
@@ -876,7 +876,7 @@ class Server
                 $registerCallback($instance);
                 $count++;
             } catch (\Throwable $e) {
-                $this->log("Error loading {$type} from '$file': " . $e->getMessage());
+                $this->log("Error loading {$type} from '$file': ".$e->getMessage());
                 // Continue to next file rather than letting one error stop everything
             }
         }
