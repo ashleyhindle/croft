@@ -39,6 +39,16 @@ Recommend mcp.json file shipped with the project: `.cursor/mcp.json`
 }
 ```
 
+## Current functionality
+- Screenshot paths
+- Read last X log entries
+- Read & filter database structure - tables, columns, indexes, foreign keys
+- List/filter routes
+- List artisan commands
+- List available config() keys in dot notation
+- List available env() keys (without leaking secrets of course)
+
+
 ## Support & Credits
 
 This was developed by Ashley Hindle. If you like it, please star it, share it, and let me know!
