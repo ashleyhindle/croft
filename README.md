@@ -1,6 +1,8 @@
 #  MCP server for all Laravel projects - better AI pair programming, coming soon..
 
-<img src="croft-boot-bg.png" width=120 height=120/>
+<p align="center">
+<img src="croft-boot-bg.png" width=180 height=180/>
+</p>
 
 
 MCP server designed specifically for Laravel. Artisan command helps your AI pair programmer work better.
