@@ -68,7 +68,6 @@ class StdioTransport implements TransportInterface
         return fwrite($this->stdout, $data.PHP_EOL);
     }
 
-
     /**
      * Close the transport
      */

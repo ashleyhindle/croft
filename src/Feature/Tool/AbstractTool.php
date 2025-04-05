@@ -61,6 +61,7 @@ abstract class AbstractTool
     protected function setDestructive(bool $value = true): self
     {
         $this->annotations['destructiveHint'] = $value;
+
         return $this;
     }
 
@@ -70,6 +71,7 @@ abstract class AbstractTool
     protected function setIdempotent(bool $value = true): self
     {
         $this->annotations['idempotentHint'] = $value;
+
         return $this;
     }
 
@@ -79,6 +81,7 @@ abstract class AbstractTool
     protected function setOpenWorld(bool $value = true): self
     {
         $this->annotations['openWorldHint'] = $value;
+
         return $this;
     }
 
@@ -88,6 +91,7 @@ abstract class AbstractTool
     protected function setReadOnly(bool $value = true): self
     {
         $this->annotations['readOnlyHint'] = $value;
+
         return $this;
     }
 
@@ -97,6 +101,7 @@ abstract class AbstractTool
     protected function setTitle(string $title): self
     {
         $this->annotations['title'] = $title;
+
         return $this;
     }
 

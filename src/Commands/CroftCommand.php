@@ -15,13 +15,14 @@ class CroftCommand extends Command
     public function handle(): int
     {
         // $this->out('Starting Croft MCP server...');
-        $server = new \Croft\Server();
+        $server = new \Croft\Server;
         $tools = config('croft.tools');
         // How to support artisan commands, not just our built in tools that are class based?
         foreach ($tools as $tool) {
-            $server->tool(new $tool());
+            $server->tool(new $tool);
         }
         $server->run();
+
         return self::SUCCESS;
     }
 

@@ -7,7 +7,6 @@ namespace Croft\Tools;
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
 use Illuminate\Support\Env;
-use Illuminate\Support\Facades\Artisan;
 
 class ListAvailableEnvVars extends AbstractTool
 {
@@ -35,7 +34,7 @@ class ListAvailableEnvVars extends AbstractTool
     {
         return [
             'type' => 'object',
-            'properties' => (object)[
+            'properties' => (object) [
                 'filename' => [
                     'type' => 'string',
                     'description' => 'The filename of the .env file to read - .env or .env.example',
@@ -49,7 +48,7 @@ class ListAvailableEnvVars extends AbstractTool
     {
         // Env::all() doesn't exist, and we don't want to include dotenv here, let's do a basic parse
         $filePath = base_path($arguments['filename'] ?? '.env');
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             return ToolResponse::error('No .env file found');
         }
 

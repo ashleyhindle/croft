@@ -45,10 +45,10 @@ class ListRoutes extends AbstractTool
             */
         return [
             'type' => 'object',
-            'properties' => (object)[
+            'properties' => (object) [
                 'params' => [
                     'type' => 'object',
-                    'properties' => (object)[
+                    'properties' => (object) [
                         'method' => [
                             'type' => 'string',
                             'description' => 'Filter the routes by method',
@@ -99,6 +99,7 @@ class ListRoutes extends AbstractTool
             }
         }
         Artisan::call('route:list', $options);
+
         return ToolResponse::text(Artisan::output());
     }
 }

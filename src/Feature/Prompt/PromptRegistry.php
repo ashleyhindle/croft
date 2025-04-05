@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Croft\Feature\Prompt;
 
-use Croft\Exceptions\ProtocolException;
 use Croft\Feature\AbstractRegistry;
-use Croft\Protocol\JsonRpc;
 
 /**
  * Registry for MCP prompts
