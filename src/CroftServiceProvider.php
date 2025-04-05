@@ -1,12 +1,15 @@
 <?php
 
-namespace VendorName\Skeleton;
+declare(strict_types=1);
 
+namespace Croft;
+
+use Croft\Commands\CroftCommand;
+use Croft\Commands\CroftRestartCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class CroftServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +19,9 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('croft')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_migration_table_name_table')
-            ->hasCommand(SkeletonCommand::class);
+            ->hasCommand(CroftCommand::class)
+            ->hasCommand(CroftRestartCommand::class);
     }
 }
