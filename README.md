@@ -1,10 +1,9 @@
 #  MCP server for all of your Laravel projects - better AI pair programming, coming soon..
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/ashleyhindle/croft.svg?style=flat-square)](https://packagist.org/packages/ashleyhindle/croft)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/ashleyhindle/croft/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/ashleyhindle/croft/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/ashleyhindle/croft/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/ashleyhindle/croft/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+
+MCP server designed specifically for Laravel. Artisan command helps your AI pair programmer work better.
+![](docs-terminal.png)
 
 
 ## Installation
