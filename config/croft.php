@@ -8,5 +8,6 @@ return [
         \Croft\Tools\ListRoutes::class,
         \Croft\Tools\ReadLogEntries::class,
         \Croft\Tools\ScreenshotUrl::class,
+        \Croft\Tools\DatabaseListTables::class,
     ],
 ];
