@@ -45,6 +45,7 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 
 ## Current functionality
 - Screenshot URLs
+- Get Flux UI component details
 - Read last X log entries
 - Read & filter database structure - tables, columns, indexes, foreign keys
 - List/filter routes
@@ -54,6 +55,61 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 
 ## Add your own tools
 It's trivial to add your own tools.
+
+Just create a class that extends our `Croft\Feature\Tool\AbstractTool` class, then make sure it's in your `croft.php` config file.
+
+Example:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace Croft\Tools;
+
+use Croft\Feature\Tool\AbstractTool;
+use Croft\Feature\Tool\ToolResponse;
+
+class {{CLASSNAME}} extends AbstractTool
+{
+    public function __construct()
+    {
+        // Setup annotations according to MCP specification
+        $this->setTitle('{{NAME}}')
+            ->setReadOnly(true)        // Just listing commands, no modifications
+            ->setDestructive(false)    // No destructive operations
+            ->setIdempotent(true)      // Safe to retry
+            ->setOpenWorld(false);     // Commands list is a closed world
+    }
+
+    public function getName(): string
+    {
+        return '{{NAME}}';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Must explain well what the tool can do so the MCP client can decide when to use it.';
+    }
+
+    /**
+    * What params does the MCP client need to provide to use this tool?
+    **/
+    public function getInputSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => (object) [
+            ],
+            'required' => [],
+        ];
+    }
+
+    public function handle(array $arguments): ToolResponse
+    {
+        return ToolResponse::text("Howdy, this is the start of something great.");
+    }
+}
+```
 
 After adding a tool you'll need to restart the server, or ask the MCP client to relist the tools.
 
