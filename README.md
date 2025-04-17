@@ -44,7 +44,7 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 ```
 
 ## Current functionality
-- Screenshot paths
+- Screenshot URLs
 - Read last X log entries
 - Read & filter database structure - tables, columns, indexes, foreign keys
 - List/filter routes
@@ -52,6 +52,10 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 - List available config() keys in dot notation
 - List available env() keys (without leaking secrets of course)
 
+## Add your own tools
+It's trivial to add your own tools.
+
+After adding a tool you'll need to restart the server, or ask the MCP client to relist the tools.
 
 ## Support & Credits
 

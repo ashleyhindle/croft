@@ -6,7 +6,6 @@ namespace Croft\Tools;
 
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
-use Illuminate\Support\Env;
 
 class ListAvailableEnvVars extends AbstractTool
 {

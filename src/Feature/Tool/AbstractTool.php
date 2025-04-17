@@ -4,12 +4,23 @@ declare(strict_types=1);
 
 namespace Croft\Feature\Tool;
 
+use Croft\Cache;
+
 /**
  * AbstractTool is the base class for all MCP tool implementations.
  */
 abstract class AbstractTool
 {
     protected array $annotations = [];
+
+    protected Cache $cache;
+
+    public function setCache(Cache $cache): self
+    {
+        $this->cache = $cache;
+
+        return $this;
+    }
 
     /**
      * Get the name of the tool.

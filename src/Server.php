@@ -21,6 +21,7 @@ use Croft\Protocol\Capability;
 use Croft\Protocol\JsonRpc;
 use Croft\Transport\StdioTransport;
 use Croft\Transport\TransportInterface;
+use Croft\Cache;
 
 class Server
 {
@@ -33,6 +34,8 @@ class Server
     private ResourceRegistry $resourceRegistry;
 
     private ResourceTemplateRegistry $resourceTemplateRegistry;
+
+    private Cache $cache;
 
     private bool $initialized = false;
 
@@ -59,6 +62,7 @@ class Server
         $this->resourceRegistry = new ResourceRegistry;
         $this->resourceTemplateRegistry = new ResourceTemplateRegistry;
         $this->transport = new StdioTransport;
+        $this->cache = new Cache;
     }
 
     /**
@@ -84,6 +88,8 @@ class Server
             // Handle class name case
             $tool = new $tool;
         }
+
+        $tool->setCache($this->cache);
 
         $this->toolRegistry->register($tool);
 

@@ -9,5 +9,8 @@ return [
         \Croft\Tools\ReadLogEntries::class,
         \Croft\Tools\ScreenshotUrl::class,
         \Croft\Tools\DatabaseListTables::class,
+        // \Croft\Tools\Flux\ListComponents::class, // TODO: Only include if fluxui is being used (look at composer.json)
+        // \Croft\Tools\Flux\GetComponentDetails::class,
+        // \Croft\Tools\Flux\GetComponentExamples::class,
     ],
 ];

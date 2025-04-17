@@ -1,0 +1,49 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Croft\Tools;
+
+use Croft\Feature\Tool\AbstractTool;
+use Croft\Feature\Tool\ToolResponse;
+
+class {{CLASSNAME}} extends AbstractTool
+{
+    public function __construct()
+    {
+        // Setup annotations according to MCP specification
+        $this->setTitle('{{NAME}}')
+            ->setReadOnly(true)        // Just listing commands, no modifications
+            ->setDestructive(false)    // No destructive operations
+            ->setIdempotent(true)      // Safe to retry
+            ->setOpenWorld(false);     // Commands list is a closed world
+    }
+
+    public function getName(): string
+    {
+        return '{{NAME}}';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Must explain well what the tool can do so the MCP client can decide when to use it.';
+    }
+
+    /**
+    * What params does the MCP client need to provide to use this tool?
+    **/
+    public function getInputSchema(): array
+    {
+        return [
+            'type' => 'object',
+            'properties' => (object) [
+            ],
+            'required' => [],
+        ];
+    }
+
+    public function handle(array $arguments): ToolResponse
+    {
+        return ToolResponse::text("Howdy, this is the start of something great.");
+    }
+}

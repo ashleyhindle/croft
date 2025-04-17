@@ -16,6 +16,12 @@ class ToolResponse
         $this->errored = $errored;
     }
 
+    public function isError(): bool
+    {
+        return $this->errored;
+    }
+
+
     public static function text(string $text, bool $errored = false): self
     {
         return new self(['type' => 'text', 'text' => $text], $errored);
