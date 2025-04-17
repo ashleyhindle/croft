@@ -2,7 +2,7 @@
 Artisan command helps your AI pair programmer work better.
 
 <p align="center">
-<img src="croft-boot-bg2.png" width=180 height=180/>
+<img src="croft-logo.png" width=180 height=180/>
 </p>
 
 
@@ -77,8 +77,7 @@ class {{CLASSNAME}} extends AbstractTool
         $this->setTitle('{{NAME}}')
             ->setReadOnly(true)        // Just listing commands, no modifications
             ->setDestructive(false)    // No destructive operations
-            ->setIdempotent(true)      // Safe to retry
-            ->setOpenWorld(false);     // Commands list is a closed world
+            ->setIdempotent(true);     // Safe to retry
     }
 
     public function getName(): string
