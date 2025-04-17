@@ -229,6 +229,7 @@ class GetComponentDetails extends AbstractTool
                 if ($tabPanel->length > 0) {
                     $labelledBy = $tabPanel->item(0)->attributes->getNamedItem('aria-labelledby');
                     if ($labelledBy) {
+                        /** @var \DOMAttr $labelledBy */
                         $tabButton = $xpath->query("//*[@id='".$labelledBy->value."']");
                         if ($tabButton->length > 0 && strtolower(trim($tabButton->item(0)->textContent)) === 'code') {
                             $heading = $xpath->query('ancestor::div/preceding-sibling::h2|ancestor::div/preceding-sibling::h3', $tabButton->item(0));
@@ -258,27 +259,5 @@ class GetComponentDetails extends AbstractTool
         }
 
         return $uniqueExamples;
-    }
-
-    /**
-     * Finds the import statement within the extracted examples
-     */
-    private function findImportStatement(array $examples): ?string
-    {
-        foreach ($examples as $example) {
-            // Try first pattern
-            if (preg_match('/import\s+{.*}\s+from\s+[\'"]@fluxui\/core[\'"]\;?/', $example['code'], $matches)) {
-                return $matches[0];
-            }
-        }
-
-        // Fallback pattern
-        foreach ($examples as $example) {
-            if (preg_match('/import\s+.*\s+from\s+[\'"]@fluxui\/.*[\'"]\;?/', $example['code'], $matches)) {
-                return $matches[0];
-            }
-        }
-
-        return null;
     }
 }

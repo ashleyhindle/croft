@@ -134,7 +134,7 @@ class ReadLogEntries extends AbstractTool
                 array_unshift($currentEntry, $line);
 
                 // If this is a new entry and we have lines collected
-                if ($this->isNewLogEntry($line) && ! empty($currentEntry)) {
+                if ($this->isNewLogEntry($line) && count($currentEntry) > 0) {
                     // Save the completed entry
                     array_unshift($logEntries, implode("\n", $currentEntry));
                     $entryCount++;

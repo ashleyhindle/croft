@@ -277,11 +277,9 @@ class Server
             case SIGINT:
                 $this->log(PHP_EOL.'SIGINT received, shutting down...');
                 exit(0);
-                break;
             case SIGTERM:
                 $this->log(PHP_EOL.'SIGTERM received, shutting down...');
                 exit(0);
-                break;
         }
     }
 
@@ -290,7 +288,8 @@ class Server
      */
     private function handleMessages(): void
     {
-        while (true) {
+        $continueRunning = true;
+        while ($continueRunning) {
             // Dispatch any pending signals if signal handling is enabled
             pcntl_signal_dispatch();
 
@@ -303,6 +302,7 @@ class Server
                     $pingSuccess = $this->ping($this->pingTimeoutMs);
                     if (! $pingSuccess && $this->pingFailureCallback) {
                         ($this->pingFailureCallback)();
+                        $continueRunning = false;
                     }
                 }
             }

@@ -31,8 +31,8 @@ class CroftCommand extends Command
      *
      * So any messages for humans need to be written on STDERR.
      */
-    private function out(string $message)
+    /*private function out(string $message)
     {
         return fwrite(STDERR, $message);
-    }
+    }*/
 }
