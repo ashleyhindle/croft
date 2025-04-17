@@ -14,7 +14,7 @@ Artisan command helps your AI pair programmer work better.
 Install the package via composer:
 
 ```bash
-composer require ashleyhindle/croft
+composer require ashleyhindle/croft --dev
 ```
 
 Publish the config file with:
