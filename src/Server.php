@@ -21,7 +21,6 @@ use Croft\Protocol\Capability;
 use Croft\Protocol\JsonRpc;
 use Croft\Transport\StdioTransport;
 use Croft\Transport\TransportInterface;
-use Croft\Cache;
 
 class Server
 {

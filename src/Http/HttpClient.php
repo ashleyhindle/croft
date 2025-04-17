@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Croft\Http;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 
 class HttpClient
 {
@@ -21,7 +21,7 @@ class HttpClient
     public static function getInstance(): self
     {
         if (self::$instance === null) {
-            self::$instance = new self();
+            self::$instance = new self;
         }
 
         return self::$instance;

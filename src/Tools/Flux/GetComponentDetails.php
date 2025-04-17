@@ -7,8 +7,8 @@ namespace Croft\Tools\Flux;
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
 use Croft\Http\HttpClient;
-use DOMXPath;
 use DOMDocument;
+use DOMXPath;
 
 class GetComponentDetails extends AbstractTool
 {
@@ -35,8 +35,8 @@ class GetComponentDetails extends AbstractTool
     }
 
     /**
-    * What params does the MCP client need to provide to use this tool?
-    **/
+     * What params does the MCP client need to provide to use this tool?
+     **/
     public function getInputSchema(): array
     {
         return [
@@ -57,39 +57,39 @@ class GetComponentDetails extends AbstractTool
             $componentName = $arguments['componentName'];
 
             // Check cache first
-            if ($this->cache->has('flux_component_details_' . $componentName)) {
-                return ToolResponse::array($this->cache->get('flux_component_details_' . $componentName));
+            if ($this->cache->has('flux_component_details_'.$componentName)) {
+                return ToolResponse::array($this->cache->get('flux_component_details_'.$componentName));
             }
 
             // Fetch component details
-            $response = HttpClient::getInstance()->get(self::FLUX_DOCS_URL . '/components/' . $componentName);
+            $response = HttpClient::getInstance()->get(self::FLUX_DOCS_URL.'/components/'.$componentName);
 
             // TODO: Validate it's a valid component name
 
-            if (!$response->successful()) {
-                return ToolResponse::error("Failed to fetch component details: HTTP " . $response->status());
+            if (! $response->successful()) {
+                return ToolResponse::error('Failed to fetch component details: HTTP '.$response->status());
             }
 
             $html = $response->body();
-            $dom = new DOMDocument();
+            $dom = new DOMDocument;
             @$dom->loadHTML($html, LIBXML_NOERROR | LIBXML_NOWARNING);
             dump($this->extractParams($dom));
 
             // Parse component details
             $details = [
                 'name' => $componentName,
-                'url' => self::FLUX_DOCS_URL . '/components/' . $componentName,
+                'url' => self::FLUX_DOCS_URL.'/components/'.$componentName,
                 'description' => $this->extractDescription($dom),
                 'props' => $this->extractParams($dom),
                 'examples' => $this->extractExamples($dom),
             ];
 
             // Cache the results
-            $this->cache->set('flux_component_details_' . $componentName, $details);
+            $this->cache->set('flux_component_details_'.$componentName, $details);
 
             return ToolResponse::array($details);
         } catch (\Exception $e) {
-            return ToolResponse::error("Failed to fetch component details: " . $e->getMessage());
+            return ToolResponse::error('Failed to fetch component details: '.$e->getMessage());
         }
     }
 
@@ -104,9 +104,6 @@ class GetComponentDetails extends AbstractTool
         return '';
     }
 
-    /**
-     * @return
-     */
     private function extractParams(DOMDocument $dom): array
     {
         $data = [];
@@ -118,7 +115,9 @@ class GetComponentDetails extends AbstractTool
         foreach ($h3Elements as $h3) {
             // Extract the tag name from the h3 element
             $tagLink = $xpath->query('.//a', $h3)->item(0);
-            if (!$tagLink) continue;
+            if (! $tagLink) {
+                continue;
+            }
 
             $tag = trim($tagLink->textContent);
             $data[$tag] = [
@@ -130,21 +129,27 @@ class GetComponentDetails extends AbstractTool
             // Find all tables that follow this h3 until the next h3
             $currentNode = $h3;
             while ($currentNode = $currentNode->nextSibling) {
-                if ($currentNode->nodeName === 'h3') break;
+                if ($currentNode->nodeName === 'h3') {
+                    break;
+                }
 
                 // Find tables within this section
                 $tables = $xpath->query('.//table', $currentNode);
                 foreach ($tables as $table) {
                     // Determine table type (props, attributes, or slots) from the header
                     $header = $xpath->query('.//th[1]//div', $table)->item(0);
-                    if (!$header) continue;
+                    if (! $header) {
+                        continue;
+                    }
 
                     $type = strtolower(trim($header->textContent));
                     $rows = $xpath->query('.//tbody/tr', $table);
 
                     foreach ($rows as $row) {
                         $cells = $xpath->query('.//td', $row);
-                        if ($cells->length < 2) continue;
+                        if ($cells->length < 2) {
+                            continue;
+                        }
 
                         $name = trim($cells->item(0)->textContent);
                         $description = trim($cells->item(1)->textContent);
@@ -224,7 +229,7 @@ class GetComponentDetails extends AbstractTool
                 if ($tabPanel->length > 0) {
                     $labelledBy = $tabPanel->item(0)->attributes->getNamedItem('aria-labelledby');
                     if ($labelledBy) {
-                        $tabButton = $xpath->query("//*[@id='" . $labelledBy->value . "']");
+                        $tabButton = $xpath->query("//*[@id='".$labelledBy->value."']");
                         if ($tabButton->length > 0 && strtolower(trim($tabButton->item(0)->textContent)) === 'code') {
                             $heading = $xpath->query('ancestor::div/preceding-sibling::h2|ancestor::div/preceding-sibling::h3', $tabButton->item(0));
                             if ($heading->length > 0) {
@@ -246,7 +251,7 @@ class GetComponentDetails extends AbstractTool
         $uniqueExamples = [];
         $seenCodes = [];
         foreach ($examples as $example) {
-            if (!isset($seenCodes[$example['code']])) {
+            if (! isset($seenCodes[$example['code']])) {
                 $uniqueExamples[] = $example;
                 $seenCodes[$example['code']] = true;
             }

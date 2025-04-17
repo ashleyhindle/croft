@@ -33,8 +33,8 @@ class ListComponents extends AbstractTool
     }
 
     /**
-    * What params does the MCP client need to provide to use this tool?
-    **/
+     * What params does the MCP client need to provide to use this tool?
+     **/
     public function getInputSchema(): array
     {
         return [
@@ -57,10 +57,10 @@ class ListComponents extends AbstractTool
                 $components = $this->cache->get('flux_components_list');
             } else {
                 // Fetch components list
-                $response = HttpClient::getInstance()->get(self::FLUX_DOCS_URL . '/components');
+                $response = HttpClient::getInstance()->get(self::FLUX_DOCS_URL.'/components');
 
-                if (!$response->successful()) {
-                    return ToolResponse::error("Failed to fetch components list: HTTP " . $response->status());
+                if (! $response->successful()) {
+                    return ToolResponse::error('Failed to fetch components list: HTTP '.$response->status());
                 }
 
                 $components = $this->extractComponents($response->body());
@@ -76,7 +76,7 @@ class ListComponents extends AbstractTool
 
             return ToolResponse::array(array_values($components));
         } catch (\Exception $e) {
-            return ToolResponse::error("Failed to fetch components list: " . $e->getMessage());
+            return ToolResponse::error('Failed to fetch components list: '.$e->getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ class ListComponents extends AbstractTool
                 $components[] = [
                     'name' => trim($name),
                     'slug' => $slug,
-                    'url' => self::FLUX_DOCS_URL . '/components/' . $slug,
+                    'url' => self::FLUX_DOCS_URL.'/components/'.$slug,
                 ];
             }
         }

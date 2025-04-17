@@ -6,7 +6,6 @@ namespace Croft\Tools\Flux;
 
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
-use Croft\Tools\Flux\GetComponentDetails;
 
 class GetComponentExamples extends AbstractTool
 {
@@ -31,8 +30,8 @@ class GetComponentExamples extends AbstractTool
     }
 
     /**
-    * What params does the MCP client need to provide to use this tool?
-    **/
+     * What params does the MCP client need to provide to use this tool?
+     **/
     public function getInputSchema(): array
     {
         return [
@@ -51,17 +50,17 @@ class GetComponentExamples extends AbstractTool
     {
         $componentDetails = $this->getComponentDetails($arguments['componentName']);
         if (is_null($componentDetails)) {
-            return ToolResponse::error("Failed to fetch component details");
+            return ToolResponse::error('Failed to fetch component details');
         }
 
         return ToolResponse::array($componentDetails['examples']);
     }
 
-    private function getComponentDetails(string $componentName): array|null
+    private function getComponentDetails(string $componentName): ?array
     {
-        $componentDetails = $this->cache->get('flux_component_details_' . $componentName);
+        $componentDetails = $this->cache->get('flux_component_details_'.$componentName);
 
-        if (!$componentDetails) {
+        if (! $componentDetails) {
             $get = new GetComponentDetails;
             $get->setCache($this->cache);
             $response = $get->handle(['componentName' => $componentName]);
@@ -70,7 +69,7 @@ class GetComponentExamples extends AbstractTool
             }
 
             // The 'get' class will have set the cache for us
-            $componentDetails = $this->cache->get('flux_component_details_' . $componentName);
+            $componentDetails = $this->cache->get('flux_component_details_'.$componentName);
         }
 
         return $componentDetails;

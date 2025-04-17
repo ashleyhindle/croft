@@ -8,13 +8,11 @@ class Cache
 {
     private array $cache = [];
 
-    public function __construct(private string $prefix = 'croft')
-    {
-    }
+    public function __construct(private string $prefix = 'croft') {}
 
     private function key(string $key): string
     {
-        return $this->prefix . ':' . $key;
+        return $this->prefix.':'.$key;
     }
 
     public function has(string $key): bool
