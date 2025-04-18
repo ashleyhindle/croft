@@ -382,7 +382,7 @@ class Server
                 'resources/list' => $this->handleResourcesList($id, $params),
                 'resources/read' => $this->handleResourcesRead($id, $params),
                 'resources/templates/list' => $this->handleResourcesTemplatesList($id, $params),
-                default => function () use ($method) {
+                default => function () use ($method, $id) {
                     $this->log("Unknown method with ID: '{$id}' and method: '{$method}' WTH");
                     throw new ProtocolException(
                         "Method not found: {$method}",
@@ -797,7 +797,7 @@ class Server
      */
     private function log(string $message): bool
     {
-        return error_log(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message), E_USER_NOTICE);
+        return trigger_error(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message));
     }
 
     /**
