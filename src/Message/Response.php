@@ -15,10 +15,6 @@ class Response extends Message implements \JsonSerializable
             throw new \InvalidArgumentException('Response cannot have both result and error');
         }
 
-        if ($result === null && $error === null) {
-            throw new \InvalidArgumentException('Response must have either result or error');
-        }
-
         parent::__construct();
     }
 
@@ -48,7 +44,7 @@ class Response extends Message implements \JsonSerializable
         $data['id'] = $this->id;
 
         if ($this->result !== null) {
-            $data['result'] = $this->result;
+            $data['result'] = (object) $this->result;
         }
 
         if ($this->error !== null) {
@@ -72,7 +68,7 @@ class Response extends Message implements \JsonSerializable
 
         return new self(
             id: $data['id'],
-            result: $data['result'] ?? null,
+            result: $data['result'] ? (object) $data['result'] : null,
             error: $data['error'] ?? null,
         );
     }
@@ -101,5 +97,10 @@ class Response extends Message implements \JsonSerializable
     public static function result(string|int $id, mixed $result): self
     {
         return new self(id: $id, result: $result);
+    }
+
+    public static function pong(string|int $id): self
+    {
+        return new self(id: $id, result: []);
     }
 }

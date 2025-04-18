@@ -48,6 +48,12 @@ class Server
 
     private float $lastPingTime = 0.0;
 
+    /** @var ?string The ID of the currently outstanding ping request */
+    private ?string $pendingPingId = null;
+
+    /** @var float The timestamp (in milliseconds) when the pending ping was sent */
+    private float $pingSentTimestamp = 0.0;
+
     /**
      * Create a new MCP server
      *
@@ -293,17 +299,30 @@ class Server
             // Dispatch any pending signals if signal handling is enabled
             pcntl_signal_dispatch();
 
-            // Check if we should send a ping
-            if ($this->pingEnabled && $this->initialized) {
-                $currentTime = microtime(true) * 1000;
-                if ($currentTime - $this->lastPingTime >= $this->pingIntervalMs) {
-                    $this->lastPingTime = $currentTime;
+            $currentTimeMs = microtime(true) * 1000;
 
-                    $pingSuccess = $this->ping($this->pingTimeoutMs);
-                    if (! $pingSuccess && $this->pingFailureCallback) {
+            // Check if a pending ping has timed out
+            if ($this->pendingPingId !== null) {
+                $elapsedTimeMs = $currentTimeMs - $this->pingSentTimestamp;
+                if ($elapsedTimeMs >= $this->pingTimeoutMs) {
+                    $this->log("Ping timeout reached for ID: {$this->pendingPingId}");
+                    $this->pendingPingId = null; // Reset pending state
+                    if ($this->pingFailureCallback) {
                         ($this->pingFailureCallback)();
-                        $continueRunning = false;
+                        // For now we're not going to disconnect the client as some clients simply don't support responding to server pings
+                        // Assume callback might signal shutdown, respect it
+                        // $continueRunning = false; // Stop the loop on timeout if callback exists
+                        // continue; // Skip further processing in this iteration
                     }
+                }
+            }
+
+            // Check if we should send a new ping (only if enabled, initialized, interval passed, and no ping is currently pending)
+            if ($this->pingEnabled && $this->initialized && $this->pendingPingId === null) {
+                if ($currentTimeMs - $this->lastPingTime >= $this->pingIntervalMs) {
+                    // It's time to send a ping
+                    $this->ping(); // Send the non-blocking ping
+                    // lastPingTime is updated inside ping() when sent
                 }
             }
 
@@ -320,14 +339,21 @@ class Server
 
             try {
                 $message = JsonRpc::parse($rawMessage);
-                $this->log('Parsed message:'.var_export($message, true));
 
                 if ($message instanceof Request) {
                     $this->handleRequest($message);
                 } elseif ($message instanceof Notification) {
                     $this->handleNotification($message);
                 } elseif ($message instanceof Response) {
-                    $this->handleResponse($message);
+                    // Check if this is the pong we are waiting for
+                    if ($this->pendingPingId !== null && $message->getId() === $this->pendingPingId) {
+                        $this->log("Received ping response (ID: {$this->pendingPingId})");
+                        $this->pendingPingId = null; // Pong received, clear pending state
+                        // Do not pass this response to handleResponse, it's been handled.
+                    } else {
+                        // Handle other unexpected or non-ping responses
+                        $this->handleResponse($message);
+                    }
                 }
             } catch (ProtocolException $e) {
                 // Handle protocol errors
@@ -376,7 +402,7 @@ class Server
 
             $response = match ($method) {
                 'initialize' => $this->handleInitialize($id, $params),
-                'ping' => Response::result($id, []),
+                'ping' => $this->handlePing($id, $params),
                 'tools/list' => $this->handleToolsList($id, $params),
                 'tools/call' => $this->handleToolCall($id, $params),
                 'prompts/list' => $this->handlePromptsList($id, $params),
@@ -394,8 +420,7 @@ class Server
             };
 
             $this->log('Sent response: '.json_encode($response));
-            $result = $this->transport->write(JsonRpc::stringify($response));
-            $this->log("Result: $result");
+            $this->transport->write(JsonRpc::stringify($response));
         } catch (ProtocolException $e) {
             $response = Response::error($id, $e->getCode(), $e->getMessage());
             $this->log('Sent response: '.json_encode($response).' with error: '.$e->getMessage());
@@ -430,10 +455,10 @@ class Server
         $method = $notification->getMethod();
 
         // Log for debugging
-        $this->log("Received notification: {$method}");
+        // $this->log("Received notification: {$method}");
 
         if ($method === 'notifications/initialized') {
-            $this->log('Client initialized');
+            // $this->log('Client initialized');
             // Could trigger additional setup here if needed
         }
 
@@ -478,6 +503,11 @@ class Server
         $this->log('Sending initialization response: '.json_encode($result));
 
         return Response::result($id, $result);
+    }
+
+    private function handlePing(string|int $id, array $params): Response
+    {
+        return Response::pong($id);
     }
 
     /**
@@ -720,15 +750,25 @@ class Server
     }
 
     /**
-     * Send a ping request to the client
+     * Send a ping request to the client (non-blocking)
      *
-     * @param  int  $timeoutMs  Timeout in milliseconds to wait for a response
-     * @return bool True if the ping was successful, false otherwise
+     * This method sends the ping and updates the server state to expect a response.
+     * The actual response handling and timeout detection happens in the main message loop.
+     *
+     * @return void
      */
-    public function ping(int $timeoutMs = 3000): bool
+    public function ping(): void
     {
+        $this->log('Ping requested');
         if (! isset($this->transport)) {
             throw new \RuntimeException('Transport not initialized');
+        }
+
+        // Avoid sending a new ping if one is already pending
+        if ($this->pendingPingId !== null) {
+            $this->log("Ping skipped: Already waiting for response to ping ID {$this->pendingPingId}");
+
+            return;
         }
 
         // Generate a unique ID for this ping
@@ -739,45 +779,20 @@ class Server
 
         // Send the ping
         $this->log("Sending ping request (ID: {$pingId})");
-        $this->transport->write(JsonRpc::stringify($pingRequest));
-
-        // Wait for response with timeout
-        $startTime = microtime(true);
-        $timeoutSec = $timeoutMs / 1000;
-
-        while (microtime(true) - $startTime < $timeoutSec) {
-            $rawMessage = $this->transport->read();
-
-            if ($rawMessage !== null) {
-                try {
-                    $message = JsonRpc::parse($rawMessage);
-
-                    // Check if this is the response to our ping
-                    if ($message instanceof Response && $message->getId() === $pingId) {
-                        $this->log("Received ping response (ID: {$pingId})");
-
-                        return true;
-                    }
-
-                    // If it's not our ping response, handle it normally
-                    if ($message instanceof Request) {
-                        $this->handleRequest($message);
-                    } elseif ($message instanceof Notification) {
-                        $this->handleNotification($message);
-                    }
-                } catch (ProtocolException $e) {
-                    $this->log('Error parsing message during ping: '.$e->getMessage());
-                }
-            }
-
-            // Sleep a bit to prevent CPU spin
-            usleep(10000); // 10ms
+        if ($this->transport->write(JsonRpc::stringify($pingRequest))) {
+            // Update state only if write was successful (optional, assumes write throws on error)
+            $this->pendingPingId = $pingId;
+            $this->pingSentTimestamp = microtime(true) * 1000;
+            $this->lastPingTime = $this->pingSentTimestamp; // Record time ping was sent for interval calculation
+        } else {
+            $this->log("Failed to send ping request (ID: {$pingId})");
+            // Optionally trigger failure callback immediately if write fails?
+            // if ($this->pingFailureCallback) {
+            //     ($this->pingFailureCallback)();
+            // }
         }
 
-        // Timeout reached without response
-        $this->log("Ping timeout reached for ID: {$pingId}");
-
-        return false;
+        // No waiting or reading here - return immediately
     }
 
     /**
@@ -802,6 +817,9 @@ class Server
         };
 
         $this->lastPingTime = microtime(true) * 1000;
+        // Reset pending state when reconfiguring
+        $this->pendingPingId = null;
+        $this->pingSentTimestamp = 0.0;
 
         return $this;
     }
@@ -813,8 +831,7 @@ class Server
      */
     private function log(string $message): bool
     {
-        return true;
-        return trigger_error(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message));
+        return fputs(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
     }
 
     /**
