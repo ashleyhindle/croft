@@ -297,6 +297,7 @@ class Server
     private function handleMessages(): void
     {
         $continueRunning = true;
+        /** @phpstan-ignore while.alwaysTrue */
         while ($continueRunning) {
             // Dispatch any pending signals if signal handling is enabled
             pcntl_signal_dispatch();
@@ -332,7 +333,7 @@ class Server
 
             if ($rawMessage === null) {
                 // No message available, sleep a bit to prevent CPU spin
-                usleep(50000);
+                usleep(100000);
 
                 continue;
             }
