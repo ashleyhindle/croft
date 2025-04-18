@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.0.10 - 2025-04-18
+
+- don't return from `log()`
+
 ## 0.0.9 - 2025-04-18
 
 - Improve ping handling
