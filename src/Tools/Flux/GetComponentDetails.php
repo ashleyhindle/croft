@@ -73,7 +73,6 @@ class GetComponentDetails extends AbstractTool
             $html = $response->body();
             $dom = new DOMDocument;
             @$dom->loadHTML($html, LIBXML_NOERROR | LIBXML_NOWARNING);
-            dump($this->extractParams($dom));
 
             // Parse component details
             $details = [
