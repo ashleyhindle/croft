@@ -795,11 +795,10 @@ class Server
      *
      * @param  string  $message  The message to log
      */
-    private function log(string $message): int|false
+    private function log(string $message): bool
     {
-        error_log(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message), E_USER_NOTICE);
-        return 1;
-        return fputs(STDERR, sprintf('[%s] %s%s', date('Y-m-d H:i:s'), $message, PHP_EOL));
+        return error_log(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message), E_USER_NOTICE);
+    }
 
     /**
      * Load and register classes from a directory
