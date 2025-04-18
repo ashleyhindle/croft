@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.0.11 - 2025-04-18
+
+- Disable 'display_errors' as it can break JSON RPC if a bad tool gets in the way
+
 ## 0.0.10 - 2025-04-18
 
 - don't return from `log()`
