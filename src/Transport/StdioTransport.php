@@ -67,6 +67,7 @@ class StdioTransport implements TransportInterface
     {
         $bytes = fwrite($this->stdout, $data.PHP_EOL);
         fflush($this->stdout);
+
         return $bytes;
     }
 

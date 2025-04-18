@@ -320,7 +320,7 @@ class Server
 
             try {
                 $message = JsonRpc::parse($rawMessage);
-                $this->log("Parsed message:" . var_export($message, true));
+                $this->log('Parsed message:'.var_export($message, true));
 
                 if ($message instanceof Request) {
                     $this->handleRequest($message);
@@ -396,7 +396,7 @@ class Server
             $this->log("Result: $result");
         } catch (ProtocolException $e) {
             $response = Response::error($id, $e->getCode(), $e->getMessage());
-            $this->log("Sent response: ".json_encode($response) . ' with error: ' . $e->getMessage());
+            $this->log('Sent response: '.json_encode($response).' with error: '.$e->getMessage());
             $this->transport->write(JsonRpc::stringify($response));
         } catch (\Exception $e) {
             $response = Response::error($id, JsonRpc::INTERNAL_ERROR, "Internal server error: {$e->getMessage()}");
