@@ -65,7 +65,9 @@ class StdioTransport implements TransportInterface
      */
     public function write(string $data): int
     {
-        return fwrite($this->stdout, $data.PHP_EOL);
+        $bytes = fwrite($this->stdout, $data.PHP_EOL);
+        fflush($this->stdout);
+        return $bytes;
     }
 
     /**
