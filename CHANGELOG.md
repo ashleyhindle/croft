@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.0.9 - 2025-04-18
+
+- Improve ping handling
+
 ## 0.0.8 - 2025-04-18
 
 - Disable trigger_error log as it can break JSON RPC
