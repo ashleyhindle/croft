@@ -827,9 +827,9 @@ class Server
      *
      * @param  string  $message  The message to log
      */
-    private function log(string $message): bool
+    private function log(string $message): void
     {
-        return fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
     }
 
     /**
