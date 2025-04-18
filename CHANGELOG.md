@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.0.7 - 2025-04-18
+
+- add handleresponse to server
+
 ## 0.0.6 - 2025-04-18
 
 - Change 'log' to trigger_error
