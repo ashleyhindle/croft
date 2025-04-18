@@ -754,8 +754,6 @@ class Server
      *
      * This method sends the ping and updates the server state to expect a response.
      * The actual response handling and timeout detection happens in the main message loop.
-     *
-     * @return void
      */
     public function ping(): void
     {
@@ -831,7 +829,7 @@ class Server
      */
     private function log(string $message): bool
     {
-        return fputs(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        return fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
     }
 
     /**
