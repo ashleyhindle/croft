@@ -813,6 +813,7 @@ class Server
      */
     private function log(string $message): bool
     {
+        return true;
         return trigger_error(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message));
     }
 
