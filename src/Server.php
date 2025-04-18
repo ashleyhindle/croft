@@ -320,6 +320,7 @@ class Server
 
             try {
                 $message = JsonRpc::parse($rawMessage);
+                $this->log("Parsed message:" . var_export($message, true));
 
                 if ($message instanceof Request) {
                     $this->handleRequest($message);
@@ -360,7 +361,7 @@ class Server
         $params = $request->getParams() ?? [];
 
         // Log for debugging
-        $this->log("Received request: {$method} (ID: {$id})");
+        $this->log("Received request: '{$method}' (ID: {$id})");
 
         try {
             // Check if we're initialized
@@ -381,10 +382,13 @@ class Server
                 'resources/list' => $this->handleResourcesList($id, $params),
                 'resources/read' => $this->handleResourcesRead($id, $params),
                 'resources/templates/list' => $this->handleResourcesTemplatesList($id, $params),
-                default => throw new ProtocolException(
-                    "Method not found: {$method}",
-                    JsonRpc::METHOD_NOT_FOUND
-                ),
+                default => function () use ($method) {
+                    $this->log("Unknown method with ID: '{$id}' and method: '{$method}' WTH");
+                    throw new ProtocolException(
+                        "Method not found: {$method}",
+                        JsonRpc::METHOD_NOT_FOUND
+                    );
+                },
             };
 
             $this->log('Sent response: '.json_encode($response));
@@ -392,6 +396,7 @@ class Server
             $this->log("Result: $result");
         } catch (ProtocolException $e) {
             $response = Response::error($id, $e->getCode(), $e->getMessage());
+            $this->log("Sent response: ".json_encode($response) . ' with error: ' . $e->getMessage());
             $this->transport->write(JsonRpc::stringify($response));
         } catch (\Exception $e) {
             $response = Response::error($id, JsonRpc::INTERNAL_ERROR, "Internal server error: {$e->getMessage()}");
@@ -477,6 +482,7 @@ class Server
 
         $tool = $this->toolRegistry->getItem($toolName);
         if (! $tool) {
+            $this->log("Unknown tool: '{$toolName}' not found in registry");
             throw new ProtocolException("Unknown tool: {$toolName}", JsonRpc::METHOD_NOT_FOUND);
         }
 
@@ -791,8 +797,9 @@ class Server
      */
     private function log(string $message): int|false
     {
-        return file_put_contents('/Users/ashleyhindle/Downloads/server.log', sprintf('[%s] %s%s', date('Y-m-d H:i:s'), $message, PHP_EOL), FILE_APPEND);
-    }
+        error_log(sprintf('[%s] %s', date('Y-m-d H:i:s'), $message), E_USER_NOTICE);
+        return 1;
+        return fputs(STDERR, sprintf('[%s] %s%s', date('Y-m-d H:i:s'), $message, PHP_EOL));
 
     /**
      * Load and register classes from a directory
