@@ -326,6 +326,8 @@ class Server
                     $this->handleRequest($message);
                 } elseif ($message instanceof Notification) {
                     $this->handleNotification($message);
+                } elseif ($message instanceof Response) {
+                    $this->handleResponse($message);
                 }
             } catch (ProtocolException $e) {
                 // Handle protocol errors
@@ -402,6 +404,20 @@ class Server
             $response = Response::error($id, JsonRpc::INTERNAL_ERROR, "Internal server error: {$e->getMessage()}");
             $this->transport->write(JsonRpc::stringify($response));
         }
+    }
+
+    /**
+     * Handle a response message
+     *
+     * @param  Response  $response  The response to handle
+     */
+    private function handleResponse(Response $response): void
+    {
+        // Not sure we should get here
+        $id = $response->getId();
+        $result = $response->getResult();
+
+        $this->log("Received response: {$id} with result: ".json_encode($result));
     }
 
     /**
