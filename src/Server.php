@@ -62,6 +62,8 @@ class Server
      */
     public function __construct(private string $name = 'MCP Server', private string $version = '1.0.0')
     {
+        // Displaying any errors will break the JSON-RPC protocol
+        ini_set('display_errors', '0');
         $this->toolRegistry = new ToolRegistry;
         $this->promptRegistry = new PromptRegistry;
         $this->resourceRegistry = new ResourceRegistry;
