@@ -7,6 +7,7 @@ namespace Croft\Tools;
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
 use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class ListRoutes extends AbstractTool
 {
@@ -27,7 +28,7 @@ class ListRoutes extends AbstractTool
 
     public function getDescription(): string
     {
-        return 'List all available routes';
+        return 'List all available routes, returns regular routes & Folio routes (if installed)';
     }
 
     public function getInputSchema(): array
@@ -98,8 +99,24 @@ class ListRoutes extends AbstractTool
                 $options['--'.$key] = $value;
             }
         }
-        Artisan::call('route:list', $options);
 
-        return ToolResponse::text(Artisan::output());
+        $routeOutput = $this->artisan('route:list', $options);
+
+        // If folio installed (or folio:list command exists), then call that and combine the results
+        // If we call it without '--json' it just hangs, so we need to use the json output for now
+        if (class_exists('Laravel\\Folio\\FolioRoutes')) {
+            $routeOutput .= "\n\n===FOLIO ROUTES (JSON)===\n\n";
+            // TODO: Reduce options to the ones folio:list support - pretty sure they don't match route:list
+            $routeOutput .= $this->artisan('folio:list', array_merge($options, ['--no-ansi' => true, '--no-interaction' => true, '--json' => true]));
+        }
+
+        return ToolResponse::text($routeOutput);
+    }
+
+    private function artisan(string $command, array $options = []): string
+    {
+        $output = new BufferedOutput();
+        Artisan::call($command, $options, $output);
+        return trim($output->fetch());
     }
 }
