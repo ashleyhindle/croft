@@ -87,30 +87,40 @@ class ScreenshotUrl extends AbstractTool
             return ToolResponse::error("Constructed URL '{$fullUrl}' is invalid.");
         }
 
+        $base64 = true;
+
         try {
-            // Create a temporary file with .png extension
-            $tempFile = tempnam(sys_get_temp_dir(), 'screenshot_').'.png';
+            if ($base64) {
+                $base64Data = Browsershot::url($fullUrl)
+                    ->windowSize($width, $height)
+                    ->ignoreHttpsErrors()
+                    ->base64Screenshot();
 
-            Browsershot::url($fullUrl)
-                ->windowSize($width, $height)
-                ->ignoreHttpsErrors()
-                ->save($tempFile);
+                return ToolResponse::image($base64Data, 'image/png');
+            } else {
+                // Create a temporary file with .png extension
+                $tempFile = tempnam(sys_get_temp_dir(), 'screenshot_').'.png';
 
-            if (! file_exists($tempFile)) {
-                return ToolResponse::error("Failed to save screenshot for path '{$relativePath}'.");
+                $base64Data = Browsershot::url($fullUrl)
+                    ->windowSize($width, $height)
+                    ->ignoreHttpsErrors()
+                    ->save($tempFile);
+
+                if (! file_exists($tempFile)) {
+                    return ToolResponse::error("Failed to save screenshot for path '{$relativePath}'.");
+                }
+
+                // Open the file with the system's default application
+                if (PHP_OS === 'Darwin') {
+                    exec('open '.escapeshellarg($tempFile).' > /dev/null 2>&1 &');
+                } elseif (PHP_OS === 'Linux') {
+                    exec('xdg-open '.escapeshellarg($tempFile).' > /dev/null 2>&1 &');
+                } elseif (PHP_OS === 'WINNT') {
+                    exec('start '.escapeshellarg($tempFile).' > NUL 2>&1');
+                }
+
+                return ToolResponse::text('Screenshot has been saved and should now be open in your default image viewer.');
             }
-
-            // Open the file with the system's default application
-            if (PHP_OS === 'Darwin') {
-                exec('open '.escapeshellarg($tempFile).' > /dev/null 2>&1 &');
-            } elseif (PHP_OS === 'Linux') {
-                exec('xdg-open '.escapeshellarg($tempFile).' > /dev/null 2>&1 &');
-            } elseif (PHP_OS === 'WINNT') {
-                exec('start '.escapeshellarg($tempFile).' > NUL 2>&1');
-            }
-
-            return ToolResponse::text('Screenshot has been saved and should now be open in your default image viewer.');
-
         } catch (\Exception $e) {
             return ToolResponse::error("Screenshot failed for path '{$relativePath}': ".$e->getMessage());
         }

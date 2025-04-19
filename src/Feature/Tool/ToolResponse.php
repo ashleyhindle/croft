@@ -32,20 +32,13 @@ class ToolResponse
         return new self(['type' => 'text', 'text' => json_encode($data)], $errored);
     }
 
-    public static function image(string $base64Data, string $mimeType, ?string $caption = null): self
+    public static function image(string $base64Data, string $mimeType): self
     {
-        $content = [
+        return new self([
             'type' => 'image',
-            'source' => [
-                'mediaType' => $mimeType,
-                'data' => $base64Data,
-            ],
-        ];
-        if ($caption !== null) {
-            $content['caption'] = $caption;
-        }
-
-        return new self($content);
+            'data' => $base64Data,
+            'mimeType' => $mimeType,
+        ]);
     }
 
     public static function error(string $message): self
