@@ -2,7 +2,7 @@
 Artisan command helps your AI pair programmer work better.
 
 <p align="center">
-<img src="croft-logo2.png" width=180 height=180/>
+<img src="croft-logo3.png" width=180 height=180/>
 </p>
 
 
