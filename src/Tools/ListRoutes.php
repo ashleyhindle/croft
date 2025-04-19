@@ -115,8 +115,9 @@ class ListRoutes extends AbstractTool
 
     private function artisan(string $command, array $options = []): string
     {
-        $output = new BufferedOutput();
+        $output = new BufferedOutput;
         Artisan::call($command, $options, $output);
+
         return trim($output->fetch());
     }
 }
