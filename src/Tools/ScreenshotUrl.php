@@ -58,7 +58,7 @@ class ScreenshotUrl extends AbstractTool
     public function handle(array $arguments): ToolResponse
     {
         // Check if the suggested package class exists
-        if (! class_exists(Browsershot::class)) {
+        if (! class_exists('\Spatie\Browsershot\Browsershot')) {
             return ToolResponse::error(
                 'Browsershot package not installed. Please run "composer require spatie/browsershot" and ensure Node/Puppeteer are installed to use this tool.'
             );
