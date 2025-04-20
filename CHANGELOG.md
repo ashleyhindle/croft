@@ -2,6 +2,18 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.2.1 - 2025-04-20
+
+### What's Changed
+
+* Create tool using Croft by @JordanDalton in https://github.com/ashleyhindle/croft/pull/1
+
+### New Contributors
+
+* @JordanDalton made their first contribution in https://github.com/ashleyhindle/croft/pull/1
+
+**Full Changelog**: https://github.com/ashleyhindle/croft/compare/0.2.0...0.2.1
+
 ## 0.2.0 - 2025-04-20
 
 - Improve error responses
