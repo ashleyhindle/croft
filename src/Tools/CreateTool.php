@@ -23,12 +23,12 @@ class CreateTool extends AbstractTool
 
     public function getName(): string
     {
-        return 'create_tool';
+        return 'create_croft_mcp_server_tool';
     }
 
     public function getDescription(): string
     {
-        return 'Create a new tool in the App/Tools namespace';
+        return 'Create a new Croft MCP Server tool in the App/Tools namespace';
     }
 
     public function getInputSchema(): array
