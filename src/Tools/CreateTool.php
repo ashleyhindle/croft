@@ -71,55 +71,55 @@ class CreateTool extends AbstractTool
         $readOnly = $arguments['read_only'] ?? true;
         $destructive = $arguments['destructive'] ?? false;
         $idempotent = $arguments['idempotent'] ?? true;
-        
+
         // Create class name (append "Tool" if not already present)
         $className = Str::studly($name);
-        if (!Str::endsWith($className, 'Tool')) {
+        if (! Str::endsWith($className, 'Tool')) {
             $className .= 'Tool';
         }
-        
+
         // Create tool name in snake_case
         $toolName = Str::snake($name);
-        
+
         // Ensure App/Tools directory exists
         $toolsDirectory = base_path('app/Tools');
-        if (!File::isDirectory($toolsDirectory)) {
+        if (! File::isDirectory($toolsDirectory)) {
             File::makeDirectory($toolsDirectory, 0755, true);
         }
-        
+
         // Get stub content
-        $stubPath = __DIR__ . '/../../stubs/tool.php.stub';
+        $stubPath = __DIR__.'/../../stubs/tool.php.stub';
         $stubContent = File::get($stubPath);
-        
+
         // Replace placeholders
         $content = str_replace('{{CLASSNAME}}', $className, $stubContent);
         $content = str_replace('{{NAME}}', $toolName, $content);
-        
+
         // Replace namespace
         $content = str_replace('namespace Croft\Tools;', 'namespace App\Tools;', $content);
-        
+
         // Update tool properties based on arguments
         $readOnlyStr = $readOnly ? 'true' : 'false';
         $destructiveStr = $destructive ? 'true' : 'false';
         $idempotentStr = $idempotent ? 'true' : 'false';
-        
+
         // Update constructor
         $constructorPattern = "/setTitle\('{{NAME}}'\)\s+->setReadOnly\(true\)\s+->setDestructive\(false\)\s+->setIdempotent\(true\);/s";
         $constructorReplacement = "setTitle('$toolName')
-            ->setReadOnly($readOnlyStr)        // " . ($readOnly ? "Just reading data, no modifications" : "This tool modifies data") . "
-            ->setDestructive($destructiveStr)    // " . ($destructive ? "Performs destructive operations" : "No destructive operations") . "
-            ->setIdempotent($idempotentStr);     // " . ($idempotent ? "Safe to retry" : "Not safe to retry") . "";
+            ->setReadOnly($readOnlyStr)        // ".($readOnly ? 'Just reading data, no modifications' : 'This tool modifies data')."
+            ->setDestructive($destructiveStr)    // ".($destructive ? 'Performs destructive operations' : 'No destructive operations')."
+            ->setIdempotent($idempotentStr);     // ".($idempotent ? 'Safe to retry' : 'Not safe to retry').'';
         $content = preg_replace($constructorPattern, $constructorReplacement, $content);
-        
+
         // Update description
         $descriptionPattern = "/return 'Must explain well what the tool can do so the MCP client can decide when to use it.';/";
         $descriptionReplacement = "return '$description';";
         $content = preg_replace($descriptionPattern, $descriptionReplacement, $content);
-        
+
         // Save the new tool file
-        $toolPath = $toolsDirectory . '/' . $className . '.php';
+        $toolPath = $toolsDirectory.'/'.$className.'.php';
         File::put($toolPath, $content);
-        
+
         return ToolResponse::text("Tool '{$className}' created successfully at {$toolPath}");
     }
 }
