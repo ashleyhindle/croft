@@ -62,14 +62,14 @@ class Response extends Message implements \JsonSerializable
             throw new \InvalidArgumentException('Missing id');
         }
 
-        if (! isset($data['result']) && ! isset($data['error'])) {
+        if (! array_key_exists('result', $data) && ! array_key_exists('error', $data)) {
             throw new \InvalidArgumentException('Missing result or error');
         }
 
         return new self(
             id: $data['id'],
-            result: $data['result'] ? (object) $data['result'] : null,
-            error: $data['error'] ?? null,
+            result: array_key_exists('result', $data) ? (object) $data['result'] : null,
+            error: array_key_exists('error', $data) ? $data['error'] : null,
         );
     }
 

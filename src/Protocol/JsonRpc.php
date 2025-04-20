@@ -57,7 +57,7 @@ class JsonRpc
             } else {
                 return Notification::fromArray($data);
             }
-        } elseif (isset($data['id']) && (isset($data['result']) || isset($data['error']))) {
+        } elseif (isset($data['id']) && (array_key_exists('result', $data) || array_key_exists('error', $data))) {
             return Response::fromArray($data);
         }
 
