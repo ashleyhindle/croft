@@ -2,6 +2,7 @@
 
 return [
     'tools' => [
+        \Croft\Tools\CreateTool::class,
         \Croft\Tools\ListArtisanCommands::class,
         \Croft\Tools\ListAvailableConfigKeys::class,
         \Croft\Tools\ListAvailableEnvVars::class,
