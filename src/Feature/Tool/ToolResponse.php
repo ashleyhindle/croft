@@ -51,6 +51,7 @@ class ToolResponse
     {
         return [
             'content' => [$this->contentBlock],
+            'isError' => $this->errored,
         ];
     }
 }
