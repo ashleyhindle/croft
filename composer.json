@@ -36,8 +36,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Croft\\": "src/",
-            "Croft\\Database\\Factories\\": "database/factories/"
+            "Croft\\": "src/"
         }
     },
     "autoload-dev": {
