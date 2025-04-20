@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.1.1 - 2025-04-20
+
+- Improve error responses
+
 ## 0.1.0 - 2025-04-19
 
 - Changes screenshot tool to 'in-IDE' image viewing now Cursor supports it in their latest version
