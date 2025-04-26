@@ -6,7 +6,6 @@ namespace Croft\Tools;
 
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
-use Illuminate\Support\Facades\Config;
 
 class GetCurrentDateAndTime extends AbstractTool
 {
@@ -43,6 +42,7 @@ class GetCurrentDateAndTime extends AbstractTool
     public function handle(array $arguments): ToolResponse
     {
         $now = now('UTC');
+
         return ToolResponse::array([
             'date' => $now->format('Y-m-d'),
             'time' => $now->format('H:i:s'),
