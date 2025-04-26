@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.2.3 - 2025-04-26
+
+- Add get current date and time tool
+
 ## 0.2.2 - 2025-04-20
 
 - Fix 'result key undefined' error when the client sends us dodgy data
