@@ -49,6 +49,7 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 
 ## Current functionality
 - Screenshot URLs
+- Get current date and time
 - Read last X log entries
 - Read & filter database structure - tables, columns, indexes, foreign keys
 - List/filter routes
