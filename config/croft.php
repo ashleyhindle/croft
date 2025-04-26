@@ -10,5 +10,6 @@ return [
         \Croft\Tools\ReadLogEntries::class,
         \Croft\Tools\ScreenshotUrl::class,
         \Croft\Tools\DatabaseListTables::class,
+        \Croft\Tools\GetCurrentDateAndTime::class,
     ],
 ];
