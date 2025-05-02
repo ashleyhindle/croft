@@ -49,16 +49,18 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 
 ## Current functionality
 - Screenshot URLs
+- Query database (read only, or read write)
+- Get absolute URL from relative path
 - Get current date and time
 - Read last X log entries
 - Read & filter database structure - tables, columns, indexes, foreign keys
 - List/filter routes
 - List artisan commands
-- List available config() keys in dot notation
+- List available config() keys (and optionally values) in dot notation
 - List available env() keys (without leaking secrets of course)
 
 ## Extra functionality
-Add more functionality with [croft.fyi »](https://croft.fyi) hosted servers
+Add more functionality with [croft.fyi »](https://croft.fyi) remote MCP servers (coming soon).
 
 ## Add your own tools
 It's trivial to add your own tools.
