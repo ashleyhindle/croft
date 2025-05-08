@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.3.2 - 2025-05-08
+
+- Allow inertiaJS docs to be included in composer package
+
 ## 0.3.1 - 2025-05-08
 
 - Adds InertiaJS docs tool as default tool in config
