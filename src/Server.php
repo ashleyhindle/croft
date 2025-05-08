@@ -65,12 +65,12 @@ class Server
     {
         // Displaying any errors will break the JSON-RPC protocol
         ini_set('display_errors', '0');
-        $this->toolRegistry = new ToolRegistry();
-        $this->promptRegistry = new PromptRegistry();
-        $this->resourceRegistry = new ResourceRegistry();
-        $this->resourceTemplateRegistry = new ResourceTemplateRegistry();
-        $this->transport = new StdioTransport();
-        $this->cache = new Cache();
+        $this->toolRegistry = new ToolRegistry;
+        $this->promptRegistry = new PromptRegistry;
+        $this->resourceRegistry = new ResourceRegistry;
+        $this->resourceTemplateRegistry = new ResourceTemplateRegistry;
+        $this->transport = new StdioTransport;
+        $this->cache = new Cache;
     }
 
     /**
@@ -94,7 +94,7 @@ class Server
     {
         if (is_string($tool)) {
             // Handle class name case
-            $tool = new $tool();
+            $tool = new $tool;
         }
 
         $tool->setCache($this->cache);
@@ -142,7 +142,7 @@ class Server
     {
         if (is_string($prompt)) {
             // Handle class name case
-            $prompt = new $prompt();
+            $prompt = new $prompt;
         }
 
         $this->promptRegistry->register($prompt);
@@ -188,7 +188,7 @@ class Server
     {
         if (is_string($resource)) {
             // Handle class name case
-            $resource = new $resource();
+            $resource = new $resource;
         }
 
         $this->resourceRegistry->register($resource);
@@ -247,7 +247,7 @@ class Server
     {
         if (is_string($template)) {
             // Handle class name case
-            $template = new $template();
+            $template = new $template;
         }
 
         $this->resourceTemplateRegistry->register($template);
@@ -258,7 +258,7 @@ class Server
     /**
      * Set the *server* instructions that will be sent during initialization
      *
-     * @param string $instructions The instructions to set
+     * @param  string  $instructions  The instructions to set
      */
     public function instructions(string $instructions): self
     {
@@ -746,7 +746,7 @@ class Server
      */
     private function matchUriAgainstTemplates(string $uri): ?array
     {
-        $parser = new UriTemplateParser();
+        $parser = new UriTemplateParser;
 
         // Try all registered templates in order
         foreach ($this->resourceTemplateRegistry->getItems() as $template) {
@@ -944,7 +944,7 @@ class Server
                 }
 
                 // Create instance
-                $instance = new $fqcn();
+                $instance = new $fqcn;
 
                 // Register using the callback
                 $registerCallback($instance);

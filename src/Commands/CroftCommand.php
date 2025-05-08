@@ -19,7 +19,7 @@ class CroftCommand extends Command
         $tools = config('croft.tools');
         // How to support artisan commands, not just our built in tools that are class based?
         foreach ($tools as $tool) {
-            $server->tool(new $tool());
+            $server->tool(new $tool);
         }
         $server->run();
 

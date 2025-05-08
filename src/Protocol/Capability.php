@@ -112,7 +112,7 @@ class Capability
 
         // We always provide logging capability unless client explicitly disables it
         if ($clientSupportsLogging) {
-            $serverCapabilities['logging'] = new \stdClass();
+            $serverCapabilities['logging'] = new \stdClass;
         }
 
         return $serverCapabilities;
