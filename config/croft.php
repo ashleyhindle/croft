@@ -3,6 +3,7 @@
 return [
     'tools' => [
         \Croft\Tools\CreateTool::class,
+        \Croft\Tools\InertiaJsDocs::class,
         \Croft\Tools\ListArtisanCommands::class,
         \Croft\Tools\ListAvailableConfigKeys::class,
         // \Croft\Tools\ListAvailableConfig::class, // Config keys _and_ values, if you're happy to pass your config values to LLMs
