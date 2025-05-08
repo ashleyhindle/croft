@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.3.1 - 2025-05-08
+
+- Adds InertiaJS docs tool as default tool in config
+
 ## 0.3.0 - 2025-05-08
 
 - Adds alpha Inertia JS docs tool as example for other docs tools
