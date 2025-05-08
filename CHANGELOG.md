@@ -2,6 +2,16 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.3.0 - 2025-05-08
+
+- Adds alpha Inertia JS docs tool as example for other docs tools
+- Fixes `screenshot_path` tool not detecting Browsershot support correctly
+- Fixes #2 with clients being too likely to try and create a croft tool when not needed
+- Adds 'server instructions' support so you can say what the server as a whole is useful for
+- Adds 'debug mode' to artisan command
+
+**Full Changelog**: https://github.com/ashleyhindle/croft/compare/0.2.3...0.3.0
+
 ## 0.2.3 - 2025-04-26
 
 - Add get current date and time tool
