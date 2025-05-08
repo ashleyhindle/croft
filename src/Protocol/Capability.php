@@ -56,12 +56,14 @@ class Capability
     public static function createInitializeResponse(
         string $name,
         string $version,
-        array $capabilities = []
+        array $capabilities = [],
+        string $instructions = ''
     ): array {
         return [
             'protocolVersion' => self::PROTOCOL_VERSION,
             'capabilities' => self::createServerCapabilities($capabilities),
             'serverInfo' => self::createServerInfo($name, $version),
+            'instructions' => $instructions,
         ];
     }
 
@@ -110,7 +112,7 @@ class Capability
 
         // We always provide logging capability unless client explicitly disables it
         if ($clientSupportsLogging) {
-            $serverCapabilities['logging'] = new \stdClass;
+            $serverCapabilities['logging'] = new \stdClass();
         }
 
         return $serverCapabilities;
