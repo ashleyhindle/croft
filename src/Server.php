@@ -48,28 +48,29 @@ class Server
 
     private float $lastPingTime = 0.0;
 
-    /** @var ?string The ID of the currently outstanding ping request */
     private ?string $pendingPingId = null;
 
-    /** @var float The timestamp (in milliseconds) when the pending ping was sent */
+    // The timestamp (in milliseconds) when the pending ping was sent
     private float $pingSentTimestamp = 0.0;
 
+    // The server instructions to be sent during initialization
+    private string $instructions = '';
+
     /**
-     * Create a new MCP server
-     *
      * @param  string  $name  The server name
      * @param  string  $version  The server version - 1.0.0
+     * @param  bool  $debug  Whether to enable debug mode
      */
-    public function __construct(private string $name = 'MCP Server', private string $version = '1.0.0')
+    public function __construct(private string $name = 'MCP Server', private string $version = '1.0.0', private bool $debug = false)
     {
         // Displaying any errors will break the JSON-RPC protocol
         ini_set('display_errors', '0');
-        $this->toolRegistry = new ToolRegistry;
-        $this->promptRegistry = new PromptRegistry;
-        $this->resourceRegistry = new ResourceRegistry;
-        $this->resourceTemplateRegistry = new ResourceTemplateRegistry;
-        $this->transport = new StdioTransport;
-        $this->cache = new Cache;
+        $this->toolRegistry = new ToolRegistry();
+        $this->promptRegistry = new PromptRegistry();
+        $this->resourceRegistry = new ResourceRegistry();
+        $this->resourceTemplateRegistry = new ResourceTemplateRegistry();
+        $this->transport = new StdioTransport();
+        $this->cache = new Cache();
     }
 
     /**
@@ -93,7 +94,7 @@ class Server
     {
         if (is_string($tool)) {
             // Handle class name case
-            $tool = new $tool;
+            $tool = new $tool();
         }
 
         $tool->setCache($this->cache);
@@ -141,7 +142,7 @@ class Server
     {
         if (is_string($prompt)) {
             // Handle class name case
-            $prompt = new $prompt;
+            $prompt = new $prompt();
         }
 
         $this->promptRegistry->register($prompt);
@@ -187,7 +188,7 @@ class Server
     {
         if (is_string($resource)) {
             // Handle class name case
-            $resource = new $resource;
+            $resource = new $resource();
         }
 
         $this->resourceRegistry->register($resource);
@@ -246,10 +247,22 @@ class Server
     {
         if (is_string($template)) {
             // Handle class name case
-            $template = new $template;
+            $template = new $template();
         }
 
         $this->resourceTemplateRegistry->register($template);
+
+        return $this;
+    }
+
+    /**
+     * Set the *server* instructions that will be sent during initialization
+     *
+     * @param string $instructions The instructions to set
+     */
+    public function instructions(string $instructions): self
+    {
+        $this->instructions = $instructions;
 
         return $this;
     }
@@ -339,6 +352,7 @@ class Server
             }
 
             $this->log("Received message: {$rawMessage}");
+            $this->debug($rawMessage);
 
             try {
                 $message = JsonRpc::parse($rawMessage);
@@ -366,6 +380,7 @@ class Server
                     $e->getMessage()
                 );
                 $this->transport->write(JsonRpc::stringify($errorResponse));
+                $this->debug(JsonRpc::stringify($errorResponse));
             } catch (\Exception $e) {
                 // Handle unexpected errors
                 $errorResponse = JsonRpc::error(
@@ -374,7 +389,15 @@ class Server
                     'Internal server error: '.$e->getMessage()
                 );
                 $this->transport->write(JsonRpc::stringify($errorResponse));
+                $this->debug(JsonRpc::stringify($errorResponse));
             }
+        }
+    }
+
+    private function debug(string $message): void
+    {
+        if ($this->debug) {
+            fwrite(STDERR, $message.PHP_EOL);
         }
     }
 
@@ -424,13 +447,16 @@ class Server
 
             $this->log('Sent response: '.json_encode($response));
             $this->transport->write(JsonRpc::stringify($response));
+            $this->debug(JsonRpc::stringify($response));
         } catch (ProtocolException $e) {
             $response = Response::error($id, $e->getCode(), $e->getMessage());
             $this->log('Sent response: '.json_encode($response).' with error: '.$e->getMessage());
             $this->transport->write(JsonRpc::stringify($response));
+            $this->debug(JsonRpc::stringify($response));
         } catch (\Exception $e) {
             $response = Response::error($id, JsonRpc::INTERNAL_ERROR, "Internal server error: {$e->getMessage()}");
             $this->transport->write(JsonRpc::stringify($response));
+            $this->debug(JsonRpc::stringify($response));
         }
     }
 
@@ -477,6 +503,7 @@ class Server
      */
     private function handleInitialize(string|int $id, array $params): Response
     {
+        $instructions = ''; // TODO: Allow setting of instructions
         $this->log('Received initialization request');
 
         // Extract client capabilities from params
@@ -494,7 +521,8 @@ class Server
         $result = Capability::createInitializeResponse(
             $this->name,
             $this->version,
-            $serverCapabilities
+            $serverCapabilities,
+            $instructions
         );
 
         // Use the client's requested protocol version if available
@@ -718,7 +746,7 @@ class Server
      */
     private function matchUriAgainstTemplates(string $uri): ?array
     {
-        $parser = new UriTemplateParser;
+        $parser = new UriTemplateParser();
 
         // Try all registered templates in order
         foreach ($this->resourceTemplateRegistry->getItems() as $template) {
@@ -832,7 +860,7 @@ class Server
      */
     private function log(string $message): void
     {
-        fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        // fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
     }
 
     /**
@@ -916,7 +944,7 @@ class Server
                 }
 
                 // Create instance
-                $instance = new $fqcn;
+                $instance = new $fqcn();
 
                 // Register using the callback
                 $registerCallback($instance);

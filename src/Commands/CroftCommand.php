@@ -8,18 +8,18 @@ use Illuminate\Console\Command;
 
 class CroftCommand extends Command
 {
-    public $signature = 'croft';
+    public $signature = 'croft {--debug}';
 
     public $description = 'Start your Croft MCP server';
 
     public function handle(): int
     {
-        // $this->out('Starting Croft MCP server...');
-        $server = new \Croft\Server;
+        $debug = $this->option('debug');
+        $server = new \Croft\Server(debug: $debug);
         $tools = config('croft.tools');
         // How to support artisan commands, not just our built in tools that are class based?
         foreach ($tools as $tool) {
-            $server->tool(new $tool);
+            $server->tool(new $tool());
         }
         $server->run();
 
