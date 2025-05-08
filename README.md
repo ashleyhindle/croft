@@ -25,7 +25,7 @@ Publish the config file with:
 php artisan vendor:publish --tag="croft-config"
 ```
 
-Add more functionality with [croft.fyi »](https://croft.fyi) hosted servers
+Add more functionality with [croft.fyi »](https://croft.fyi) hosted servers (coming soon)
 
 ## Usage
 To make use of Croft you need to add it as an MCP server in your favourite tool.
@@ -49,6 +49,7 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 
 ## Current functionality
 - Screenshot URLs
+- InertiaJS docs
 - Query database (read only, or read write)
 - Get absolute URL from relative path
 - Get current date and time
