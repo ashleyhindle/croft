@@ -14,7 +14,7 @@ class CreateTool extends AbstractTool
     public function __construct()
     {
         // Setup annotations according to MCP specification
-        $this->setTitle('Create Tool')
+        $this->setTitle('Create Croft MCP ServerTool')
             ->setReadOnly(false)        // This tool modifies the filesystem
             ->setDestructive(false)     // Not destructive as it creates new files
             ->setIdempotent(false)      // Creating the same tool twice would error
@@ -28,7 +28,7 @@ class CreateTool extends AbstractTool
 
     public function getDescription(): string
     {
-        return 'Create a new Croft MCP Server tool in the App/Tools namespace';
+        return 'Create a new Croft MCP Server tool in the App/Tools namespace. This should only be used when the user wants to add a new tool to their MCP server.';
     }
 
     public function getInputSchema(): array
