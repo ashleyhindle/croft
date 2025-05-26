@@ -1,7 +1,7 @@
 ### MCP server specifically for local Laravel development
 Artisan command provides tools to your MCP client to help your AI pair programmer work better.
 This is specifically designed to offer tools that are useful _locally_.
-Add more functionality with [croft.fyi »](https://croft.fyi) hosted servers
+Add more functionality with [usecroft.com »](https://usecroft.com) hosted servers
 
 <p align="center">
 <img src="croft-logo3.png" width=180 height=180/>
@@ -25,7 +25,7 @@ Publish the config file with:
 php artisan vendor:publish --tag="croft-config"
 ```
 
-Add more functionality with [croft.fyi »](https://croft.fyi) hosted servers (coming soon)
+Add more functionality with [usecroft.com »](https://usecroft.com) hosted servers (coming soon)
 
 ## Usage
 To make use of Croft you need to add it as an MCP server in your favourite tool.
@@ -61,7 +61,7 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 - List available env() keys (without leaking secrets of course)
 
 ## Extra functionality
-Add more functionality with [croft.fyi »](https://croft.fyi) remote MCP servers (coming soon).
+Add more functionality with [usecroft.com »](https://usecroft.com) remote MCP servers (coming soon).
 
 ## Add your own tools
 It's trivial to add your own tools.
