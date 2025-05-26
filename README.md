@@ -16,7 +16,7 @@ Add more functionality with [usecroft.com »](https://usecroft.com) hosted serve
 Install the package via composer:
 
 ```bash
-composer require ashleyhindle/croft --dev
+composer require usecroft/croft-laravel --dev
 ```
 
 Publish the config file with:
