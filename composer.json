@@ -1,13 +1,13 @@
 {
-    "name": "ashleyhindle/croft",
+    "name": "usecroft/croft-laravel",
     "description": "MCP server for all of your Laravel projects - better AI pair programming, coming soon.. ",
     "keywords": [
         "laravel",
         "mcp",
         "croft"
     ],
-    "homepage": "https://github.com/ashleyhindle/croft",
-    "license": "MIT",
+    "homepage": "https://github.com/usecroft/croft-laravel",
+    "license": "Apache",
     "authors": [
         {
             "name": "Ashley Hindle",
@@ -32,7 +32,7 @@
         "phpstan/phpstan-phpunit": "^1.3||^2.0"
     },
     "suggests": {
-        "spatie/browsershot": "Required to use the screenshot_url tool. Requires Node and Puppeteer installation."
+        "spatie/browsershot": "Required to use the screenshot_url tool. Requires Node and Puppeteer installation. Restart MCP server after installing."
     },
     "autoload": {
         "psr-4": {
