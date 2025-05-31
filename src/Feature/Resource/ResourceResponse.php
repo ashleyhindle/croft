@@ -25,7 +25,7 @@ class ResourceResponse
     public function toArray(): array
     {
         return [
-            'contents' => [$this->contentBlock]
+            'contents' => [$this->contentBlock],
         ];
     }
 }
