@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.3.4 - 2025-05-31
+
+- [feat: add new Croft tool to create an MCP resource from a stub](https://github.com/usecroft/croft-laravel/commit/57ca729e3733a3d811ffb0824f7373880720f6a5)
+
 ## 0.3.3 - 2025-05-31
 
 - Enable setting of `resources` in the Croft config file: `croft.php`
