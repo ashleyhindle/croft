@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Croft\Feature\Resource;
 
-use Croft\Feature\Resource\ResourceResponse;
-
 /**
  * Base class for all MCP resources
  *
@@ -64,10 +62,8 @@ abstract class AbstractResource
      * Get the content of the resource
      *
      * @return array The resource content in MCP format:
-     *
      */
     abstract public function getContent(): string;
-
 
     public function getResponse(): ResourceResponse
     {
