@@ -2,6 +2,10 @@
 
 All notable changes to `croft` will be documented in this file.
 
+## 0.3.3 - 2025-05-31
+
+- Enable setting of `resources` in the Croft config file: `croft.php`
+
 ## 0.3.2 - 2025-05-08
 
 - Allow inertiaJS docs to be included in composer package
