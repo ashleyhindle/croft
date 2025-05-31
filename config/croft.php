@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'resources' => [
+    ],
     'tools' => [
         \Croft\Tools\CreateTool::class,
         \Croft\Tools\InertiaJsDocs::class,

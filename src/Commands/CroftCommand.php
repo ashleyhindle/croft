@@ -17,10 +17,17 @@ class CroftCommand extends Command
         $debug = $this->option('debug');
         $server = new \Croft\Server(debug: $debug);
         $tools = config('croft.tools');
+
         // How to support artisan commands, not just our built in tools that are class based?
         foreach ($tools as $tool) {
             $server->tool(new $tool);
         }
+
+        $resources = config('croft.resources');
+        foreach ($resources as $resource) {
+            $server->resource(new $resource);
+        }
+
         $server->run();
 
         return self::SUCCESS;

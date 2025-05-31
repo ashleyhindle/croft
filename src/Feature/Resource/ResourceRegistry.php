@@ -49,12 +49,12 @@ class ResourceRegistry extends AbstractRegistry
         $schemas = [];
 
         foreach ($this->items as $uri => $resource) {
-            $schemas[] = [
+            $schemas[] = array_filter([
                 'uri' => $uri,
                 'name' => $resource->getName(),
                 'description' => $resource->getDescription(),
-                'mimeType' => $resource->getMimeType(),
-            ];
+                'mimeType' => $resource->getMimeType() ?? null,
+            ]);
         }
 
         return $schemas;

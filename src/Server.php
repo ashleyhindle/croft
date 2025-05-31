@@ -711,12 +711,10 @@ class Server
 
         // First check if this URI directly matches a registered resource
         if ($this->resourceRegistry->hasItem($uri)) {
+            $this->log("Resource found: {$uri}");
             $resource = $this->resourceRegistry->get($uri);
-            $content = $resource->getContent();
 
-            return Response::result($id, [
-                'contents' => [$content],
-            ]);
+            return new Response($id, $resource->getResponse()->toArray());
         }
 
         // If not a direct match, try to match against templates
@@ -860,7 +858,7 @@ class Server
      */
     private function log(string $message): void
     {
-        // fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
     }
 
     /**
