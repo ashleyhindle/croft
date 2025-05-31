@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Croft\Resources;
+
+use Croft\Feature\Resource\AbstractResource;
+
+class {{CLASSNAME}} extends AbstractResource
+{
+    public function getUri(): string
+    {
+        return '/{{NAME}}';
+    }
+
+    public function getDescription(): string
+    {
+        return '{{DESCRIPTION}}';
+    }
+
+    public function getMimeType(): ?string
+    {
+        return null;
+    }
+
+    public function getContent(): string
+    {
+        return 'This is the content of this resource';
+    }
+}

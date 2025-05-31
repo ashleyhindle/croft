@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Croft\Tools;
+namespace App\Croft\Tools;
 
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;

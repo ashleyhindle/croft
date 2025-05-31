@@ -4,7 +4,8 @@ return [
     'resources' => [
     ],
     'tools' => [
-        \Croft\Tools\CreateTool::class,
+        \Croft\Tools\CreateCroftTool::class,
+        \Croft\Tools\CreateCroftResource::class,
         \Croft\Tools\InertiaJsDocs::class,
         \Croft\Tools\ListArtisanCommands::class,
         \Croft\Tools\ListAvailableConfigKeys::class,
