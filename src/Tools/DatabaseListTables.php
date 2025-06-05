@@ -7,8 +7,8 @@ namespace Croft\Tools;
 use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseListTables extends AbstractTool
 {
@@ -71,7 +71,7 @@ class DatabaseListTables extends AbstractTool
                 'foreign_keys' => $foreignKeys,
             ];
         } catch (\Exception $e) {
-            Log::error('Failed to get table structure for: ' . $tableName, [
+            Log::error('Failed to get table structure for: '.$tableName, [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
