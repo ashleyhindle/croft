@@ -8,6 +8,7 @@ use Croft\Feature\Tool\AbstractTool;
 use Croft\Feature\Tool\ToolResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Log;
 
 class DatabaseListTables extends AbstractTool
 {
@@ -49,7 +50,7 @@ class DatabaseListTables extends AbstractTool
     {
         $structure = $this->getAllTablesStructure($arguments['filter'] ?? '');
 
-        return ToolResponse::array($structure);
+        return ToolResponse::array(['engine' => DB::getDriverName(), 'structure' => $structure]);
     }
 
     public function getAllTables()
@@ -70,7 +71,7 @@ class DatabaseListTables extends AbstractTool
                 'foreign_keys' => $foreignKeys,
             ];
         } catch (\Exception $e) {
-            \Log::error('Failed to get table structure for: '.$tableName, [
+            Log::error('Failed to get table structure for: ' . $tableName, [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
@@ -108,6 +109,7 @@ class DatabaseListTables extends AbstractTool
                     ->getConnection()
                     ->getSchemaBuilder()
                     ->hasColumn($tableName, $column),
+                'default' => '',
             ];
         }
 
