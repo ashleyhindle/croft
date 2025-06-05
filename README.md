@@ -1,15 +1,8 @@
-### MCP server specifically for local Laravel development
-Artisan command provides tools to your MCP client to help your AI pair programmer work better.
-This is specifically designed to offer tools that are useful _locally_.
-Add more functionality with [usecroft.com »](https://usecroft.com) hosted servers
+![Croft Laravel](https://github.com/user-attachments/assets/6c42134d-5236-4ae1-8c61-bce4db5d9de1)
 
-<p align="center">
-<img src="croft-logo3.png" width=180 height=180/>
-</p>
+Croft is an MCP server designed specifcally for Laravel developers, by Laravel developers. We wanted a plug and play solution to boosting productivity, so we built one. The `php artisan croft` command provides tools to your MCP client to help your AI pair programmer work better. This package is specifically designed to offer tools that are useful _locally_.
 
-
-![](docs-terminal.png)
-
+Add even more functionality with [usecroft.com »](https://usecroft.com) hosted servers.
 
 ## Installation
 
