@@ -1,12 +1,12 @@
 {
-    "name": "usecroft/croft-laravel",
+    "name": "usecroft/laravel",
     "description": "MCP server for all of your Laravel projects - better AI pair programming, coming soon.. ",
     "keywords": [
         "laravel",
         "mcp",
         "croft"
     ],
-    "homepage": "https://github.com/usecroft/croft-laravel",
+    "homepage": "https://github.com/usecroft/laravel",
     "license": "Apache-2.0",
     "authors": [
         {

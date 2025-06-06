@@ -9,7 +9,7 @@ Add even more functionality with [usecroft.com »](https://usecroft.com) hosted 
 Install the package via composer:
 
 ```bash
-composer require usecroft/croft-laravel --dev
+composer require usecroft/laravel --dev
 ```
 
 Publish the config file with:
@@ -21,6 +21,7 @@ php artisan vendor:publish --tag="croft-config"
 Add more functionality with [usecroft.com »](https://usecroft.com) hosted servers (coming soon)
 
 ## Usage
+
 To make use of Croft you need to add it as an MCP server in your favourite tool.
 
 The command the MCP client needs to run is `./artisan croft`
@@ -41,6 +42,7 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 ```
 
 ## Current functionality
+
 - Screenshot URLs
 - InertiaJS docs
 - Query database (read only, or read write)
@@ -54,14 +56,17 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 - List available env() keys (without leaking secrets of course)
 
 ## Extra functionality
+
 Add more functionality with [usecroft.com »](https://usecroft.com) remote MCP servers (coming soon).
 
 ## Add your own tools
+
 It's trivial to add your own tools.
 
 Just create a class that extends our `Croft\Feature\Tool\AbstractTool` class, then make sure it's in your `croft.php` config file.
 
 Example:
+
 ```php
 <?php
 
