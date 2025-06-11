@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Croft;
 
 use Croft\Commands\CroftCommand;
+use Croft\Commands\CroftInstallCommand;
 use Croft\Commands\CroftRestartCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -22,6 +23,7 @@ class CroftServiceProvider extends PackageServiceProvider
             ->name('croft')
             ->hasConfigFile()
             ->hasCommand(CroftCommand::class)
+            ->hasCommand(CroftInstallCommand::class)
             ->hasCommand(CroftRestartCommand::class);
     }
 }
