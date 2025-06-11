@@ -55,16 +55,16 @@ class CroftInstallCommand extends Command
     protected function installForCursor(): int
     {
         $cursorDir = base_path('.cursor');
-        $mcpJsonPath = $cursorDir . '/mcp.json';
+        $mcpJsonPath = $cursorDir.'/mcp.json';
 
-        if (!File::exists($cursorDir)) {
+        if (! File::exists($cursorDir)) {
             $this->info('.cursor directory not found. Creating it...');
             File::makeDirectory($cursorDir);
             $this->info('.cursor directory created successfully.');
             // Now proceed to create mcp.json as if the directory was just found empty
         }
 
-        if (!File::isDirectory($cursorDir)) {
+        if (! File::isDirectory($cursorDir)) {
             $this->error('.cursor exists but is not a directory. Please remove it and try again.');
 
             return static::FAILURE;
@@ -79,7 +79,7 @@ class CroftInstallCommand extends Command
 
         // If mcp.json does not exist (which will be true if .cursor was just created)
         // or if it existed but was empty/invalid, this block will handle it.
-        if (!File::exists($mcpJsonPath)) {
+        if (! File::exists($mcpJsonPath)) {
             $this->info('mcp.json not found for Cursor. Creating it...');
             $content = [
                 'mcpServers' => [

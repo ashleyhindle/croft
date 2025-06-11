@@ -35,4 +35,3 @@ class CroftInstallWindsurfCommandTest extends TestCase
         $this->assertFalse(File::exists(base_path('.cursor/mcp.json')));
     }
 }
-
