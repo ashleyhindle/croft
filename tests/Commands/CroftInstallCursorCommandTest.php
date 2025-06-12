@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Attributes\Test;
 
-
 beforeEach(function () {
     // Clean up created directories and files after each test
     File::delete(base_path('.cursor/mcp.json'));
