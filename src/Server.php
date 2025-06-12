@@ -124,7 +124,7 @@ class Server
             'tool',
             function ($tool) {
                 $this->toolRegistry->register($tool);
-                $this->log('Registered tool: '.$tool->getName());
+                $this->log('Registered tool: ' . $tool->getName());
             }
         );
 
@@ -170,7 +170,7 @@ class Server
             'prompt',
             function ($prompt) {
                 $this->promptRegistry->register($prompt);
-                $this->log('Registered prompt: '.$prompt->getName());
+                $this->log('Registered prompt: ' . $prompt->getName());
             }
         );
 
@@ -217,7 +217,7 @@ class Server
             'resource',
             function ($resource) {
                 $this->resourceRegistry->register($resource);
-                $this->log('Registered resource: '.$resource->getUri());
+                $this->log('Registered resource: ' . $resource->getUri());
             }
         );
 
@@ -229,7 +229,7 @@ class Server
             'resource template',
             function ($template) {
                 $this->resourceTemplateRegistry->register($template);
-                $this->log('Registered resource template: '.$template->getUriTemplate());
+                $this->log('Registered resource template: ' . $template->getUriTemplate());
             }
         );
 
@@ -296,10 +296,10 @@ class Server
     {
         switch ($signo) {
             case SIGINT:
-                $this->log(PHP_EOL.'SIGINT received, shutting down...');
+                $this->log(PHP_EOL . 'SIGINT received, shutting down...');
                 exit(0);
             case SIGTERM:
-                $this->log(PHP_EOL.'SIGTERM received, shutting down...');
+                $this->log(PHP_EOL . 'SIGTERM received, shutting down...');
                 exit(0);
         }
     }
@@ -386,7 +386,7 @@ class Server
                 $errorResponse = JsonRpc::error(
                     'unknown',
                     JsonRpc::INTERNAL_ERROR,
-                    'Internal server error: '.$e->getMessage()
+                    'Internal server error: ' . $e->getMessage()
                 );
                 $this->transport->write(JsonRpc::stringify($errorResponse));
                 $this->debug(JsonRpc::stringify($errorResponse));
@@ -397,7 +397,7 @@ class Server
     private function debug(string $message): void
     {
         if ($this->debug) {
-            fwrite(STDERR, $message.PHP_EOL);
+            fwrite(STDERR, $message . PHP_EOL);
         }
     }
 
@@ -436,21 +436,19 @@ class Server
                 'resources/list' => $this->handleResourcesList($id, $params),
                 'resources/read' => $this->handleResourcesRead($id, $params),
                 'resources/templates/list' => $this->handleResourcesTemplatesList($id, $params),
-                default => function () use ($method, $id) {
-                    $this->log("Unknown method with ID: '{$id}' and method: '{$method}' WTH");
-                    throw new ProtocolException(
-                        "Method not found: {$method}",
-                        JsonRpc::METHOD_NOT_FOUND
-                    );
-                },
+                default =>
+                throw new ProtocolException(
+                    "Method not found: {$method}",
+                    JsonRpc::METHOD_NOT_FOUND
+                )
             };
 
-            $this->log('Sent response: '.json_encode($response));
+            $this->log('Sent response: ' . json_encode($response));
             $this->transport->write(JsonRpc::stringify($response));
             $this->debug(JsonRpc::stringify($response));
         } catch (ProtocolException $e) {
             $response = Response::error($id, $e->getCode(), $e->getMessage());
-            $this->log('Sent response: '.json_encode($response).' with error: '.$e->getMessage());
+            $this->log('Sent response: ' . json_encode($response) . ' with error: ' . $e->getMessage());
             $this->transport->write(JsonRpc::stringify($response));
             $this->debug(JsonRpc::stringify($response));
         } catch (\Exception $e) {
@@ -471,7 +469,7 @@ class Server
         $id = $response->getId();
         $result = $response->getResult();
 
-        $this->log("Received response: {$id} with result: ".json_encode($result));
+        $this->log("Received response: {$id} with result: " . json_encode($result));
     }
 
     /**
@@ -531,7 +529,7 @@ class Server
         }
 
         $this->initialized = true;
-        $this->log('Sending initialization response: '.json_encode($result));
+        $this->log('Sending initialization response: ' . json_encode($result));
 
         return Response::result($id, $result);
     }
@@ -598,7 +596,7 @@ class Server
                 'content' => [
                     [
                         'type' => 'text',
-                        'text' => 'Error executing tool: '.$e->getMessage(),
+                        'text' => 'Error executing tool: ' . $e->getMessage(),
                     ],
                 ],
                 'isError' => true,
@@ -670,7 +668,7 @@ class Server
             throw $e;
         } catch (\Exception $e) {
             throw new ProtocolException(
-                'Error rendering prompt: '.$e->getMessage(),
+                'Error rendering prompt: ' . $e->getMessage(),
                 JsonRpc::INTERNAL_ERROR
             );
         }
@@ -796,7 +794,7 @@ class Server
         }
 
         // Generate a unique ID for this ping
-        $pingId = 'ping-'.uniqid();
+        $pingId = 'ping-' . uniqid();
 
         // Create ping request
         $pingRequest = new Request($pingId, 'ping');
@@ -855,7 +853,7 @@ class Server
      */
     private function log(string $message): void
     {
-        fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message) . PHP_EOL);
     }
 
     /**
@@ -882,7 +880,7 @@ class Server
         $this->log("Loading {$type}s from directory: $directory");
 
         // Get all PHP files in the directory
-        $phpFiles = glob($directory.'/*.php');
+        $phpFiles = glob($directory . '/*.php');
 
         if (empty($phpFiles)) {
             $this->log("No PHP files found in $directory");
@@ -897,7 +895,7 @@ class Server
             $className = pathinfo($file, PATHINFO_FILENAME);
 
             // Build fully qualified class name with namespace if provided
-            $fqcn = $namespace ? $namespace.'\\'.$className : $className;
+            $fqcn = $namespace ? $namespace . '\\' . $className : $className;
 
             try {
                 // Check if the file contains a class
@@ -945,7 +943,7 @@ class Server
                 $registerCallback($instance);
                 $count++;
             } catch (\Throwable $e) {
-                $this->log("Error loading {$type} from '$file': ".$e->getMessage());
+                $this->log("Error loading {$type} from '$file': " . $e->getMessage());
                 // Continue to next file rather than letting one error stop everything
             }
         }
