@@ -503,7 +503,7 @@ class Server
      */
     private function handleInitialize(string|int $id, array $params): Response
     {
-        $instructions = ''; // TODO: Allow setting of instructions
+        $instructions = $this->instructions;
         $this->log('Received initialization request');
 
         // Extract client capabilities from params
@@ -787,9 +787,6 @@ class Server
     public function ping(): void
     {
         $this->log('Ping requested');
-        if (! isset($this->transport)) {
-            throw new \RuntimeException('Transport not initialized');
-        }
 
         // Avoid sending a new ping if one is already pending
         if ($this->pendingPingId !== null) {

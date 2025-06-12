@@ -59,6 +59,7 @@ class ScreenshotUrl extends AbstractTool
     {
         // Check if the suggested package class exists
         try {
+            // @phpstan-ignore class.notFound
             Browsershot::url('https://example.com');
         } catch (\Throwable $e) {
             return ToolResponse::error(
@@ -89,42 +90,16 @@ class ScreenshotUrl extends AbstractTool
             return ToolResponse::error("Constructed URL '{$fullUrl}' is invalid.");
         }
 
-        $base64 = true;
-
         try {
-            if ($base64) {
-                $base64Data = Browsershot::url($fullUrl)
-                    ->windowSize($width, $height)
-                    ->ignoreHttpsErrors()
-                    ->waitUntilNetworkIdle(false)
-                    ->base64Screenshot();
+            // @phpstan-ignore class.notFound
+            $base64Data = Browsershot::url($fullUrl)
+                ->windowSize($width, $height)
+                ->ignoreHttpsErrors()
+                ->waitUntilNetworkIdle(false)
+                ->base64Screenshot();
 
-                return ToolResponse::image($base64Data, 'image/png');
-            } else {
-                // Create a temporary file with .png extension
-                $tempFile = tempnam(sys_get_temp_dir(), 'screenshot_').'.png';
-
-                $base64Data = Browsershot::url($fullUrl)
-                    ->windowSize($width, $height)
-                    ->ignoreHttpsErrors()
-                    ->save($tempFile);
-
-                if (! file_exists($tempFile)) {
-                    return ToolResponse::error("Failed to save screenshot for path '{$relativePath}'.");
-                }
-
-                // Open the file with the system's default application
-                if (PHP_OS === 'Darwin') {
-                    exec('open '.escapeshellarg($tempFile).' > /dev/null 2>&1 &');
-                } elseif (PHP_OS === 'Linux') {
-                    exec('xdg-open '.escapeshellarg($tempFile).' > /dev/null 2>&1 &');
-                } elseif (PHP_OS === 'WINNT') {
-                    exec('start '.escapeshellarg($tempFile).' > NUL 2>&1');
-                }
-
-                return ToolResponse::text('Screenshot has been saved and should now be open in your default image viewer.');
-            }
-        } catch (\Exception $e) {
+            return ToolResponse::image($base64Data, 'image/png');
+        } catch (\Throwable $e) {
             return ToolResponse::error("Screenshot failed for path '{$relativePath}': ".$e->getMessage());
         }
     }
