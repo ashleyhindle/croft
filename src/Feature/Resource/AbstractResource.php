@@ -61,7 +61,7 @@ abstract class AbstractResource
     /**
      * Get the content of the resource
      *
-     * @return array The resource content in MCP format:
+     * @return string The content of the resource
      */
     abstract public function getContent(): string;
 
