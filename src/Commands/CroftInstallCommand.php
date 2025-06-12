@@ -29,13 +29,14 @@ class CroftInstallCommand extends Command
             ['cursor' => 'Cursor', 'windsurf' => 'Windsurf', 'phpstorm' => 'PhpStorm (coming soon)'],
             'cursor'
         );
+        $editorResult = self::FAILURE;
 
         switch ($editor) {
             case 'cursor':
-                return $this->installForCursor();
+                $editorResult = $this->installForCursor();
+                break;
             case 'windsurf':
-                $this->line('To configure Windsurf, please see: <href=https://docs.windsurf.com/windsurf/cascade/mcp#mcp-config-json>https://docs.windsurf.com/windsurf/cascade/mcp#mcp-config-json</>');
-                $this->comment('Windsurf setup is manual for now. Please follow the link above.');
+                $editorResult = $this->installForWindsurf();
                 break;
             case 'phpstorm':
                 $this->comment('PhpStorm integration is coming soon. Please check back later.');
@@ -46,7 +47,23 @@ class CroftInstallCommand extends Command
                 return static::FAILURE;
         }
 
+        if ($editorResult === self::FAILURE) {
+            return $editorResult;
+        }
+
+        $this->info('Publishing config file..');
+        $this->call('vendor:publish', [
+            '--tag' => 'croft-config',
+        ]);
+
         return static::SUCCESS;
+    }
+
+    protected function getProjectName(): string
+    {
+        $parts = explode(DIRECTORY_SEPARATOR, base_path());
+
+        return end($parts);
     }
 
     /**
@@ -54,48 +71,67 @@ class CroftInstallCommand extends Command
      */
     protected function installForCursor(): int
     {
-        $cursorDir = base_path('.cursor');
-        $mcpJsonPath = $cursorDir.'/mcp.json';
+        return $this->installToMcpJson(base_path('.cursor'), 'Cursor');
+    }
 
-        if (! File::exists($cursorDir)) {
-            $this->info('.cursor directory not found. Creating it...');
-            File::makeDirectory($cursorDir);
-            $this->info('.cursor directory created successfully.');
-            // Now proceed to create mcp.json as if the directory was just found empty
+    protected function installForWindsurf(): int
+    {
+        return $this->installToMcpJson(getenv('HOME').'/.codeium/windsurf', 'Windsurf', 'mcp_config.json', true);
+    }
+
+    protected function installToMcpJson(string $mcpDir, string $editor, string $filename = 'mcp.json', bool $absolute = false): int
+    {
+        $projectName = $this->getProjectName();
+        $mcpJsonPath = $mcpDir.'/'.$filename;
+
+        if (! File::exists($mcpDir)) {
+            $this->info($mcpDir.' directory not found. Creating it...');
+            File::makeDirectory($mcpDir, 0755, true);
+            $this->info($mcpDir.' directory created successfully.');
         }
 
-        if (! File::isDirectory($cursorDir)) {
-            $this->error('.cursor exists but is not a directory. Please remove it and try again.');
+        if (! File::isDirectory($mcpDir)) {
+            $this->error($mcpDir.' exists but is not a directory. Please remove it and try again.');
 
             return static::FAILURE;
         }
 
-        $this->info('Found .cursor directory for Cursor.');
+        $this->info('Found '.$mcpDir.' directory for '.$editor);
 
-        $croftMcpConfig = [
-            'command' => './artisan',
-            'args' => ['croft'],
-        ];
+        if ($absolute) {
+            $croftMcpConfig = [
+                'command' => PHP_BINARY,
+                'args' => [base_path('artisan'), 'croft'],
+            ];
+        } else {
+            $croftMcpConfig = [
+                'command' => './artisan',
+                'args' => ['croft'],
+            ];
+        }
+
+        $serverKey = $absolute ? 'croft-'.$projectName : 'croft-local';
 
         // If mcp.json does not exist (which will be true if .cursor was just created)
         // or if it existed but was empty/invalid, this block will handle it.
         if (! File::exists($mcpJsonPath)) {
-            $this->info('mcp.json not found for Cursor. Creating it...');
+            $this->info($filename.' not found for '.$mcpDir.'. Creating it...');
             $content = [
                 'mcpServers' => [
-                    'croft' => $croftMcpConfig,
+                    $serverKey => $croftMcpConfig,
                 ],
             ];
+
             File::put($mcpJsonPath, json_encode($content, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            $this->info('mcp.json created successfully in .cursor directory for Cursor.');
+            $this->info($filename.' created successfully in '.$mcpDir.' directory for '.$editor);
         } else {
-            $this->info('Found mcp.json for Cursor. Checking content...');
+            $this->info('Found '.$filename.' for '.$editor.'. Checking content...');
             $jsonContent = File::get($mcpJsonPath);
             $data = json_decode($jsonContent, true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                $this->error('Error decoding mcp.json: '.json_last_error_msg());
-                $this->comment('Please check the mcp.json file format for Cursor.');
+                $this->error('Error decoding '.$filename.': '.json_last_error_msg());
+                $this->comment('Please check the '.$filename.' file format for '.$editor.'.');
 
                 return static::FAILURE;
             }
@@ -105,8 +141,8 @@ class CroftInstallCommand extends Command
             $isNonEmptyList = is_array($data) && ! empty($data) && array_keys($data) === range(0, count($data) - 1);
 
             if (! is_array($data) || $isNonEmptyList) {
-                $this->error('mcp.json for Cursor does not contain a valid JSON object.');
-                $this->comment('Overwriting with default Croft configuration for Cursor.');
+                $this->error($filename.' for '.$mcpDir.' does not contain a valid JSON object.');
+                $this->comment('Overwriting with default Croft configuration for '.$editor.'.');
                 $data = [];
             }
 
@@ -116,10 +152,10 @@ class CroftInstallCommand extends Command
             }
 
             // Add or update the croft configuration
-            $data['mcpServers']['croft'] = $croftMcpConfig;
+            $data['mcpServers'][$serverKey] = $croftMcpConfig;
 
             File::put($mcpJsonPath, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-            $this->info('mcp.json updated successfully with Croft server configuration for Cursor.');
+            $this->info($mcpDir.' updated successfully with Croft server configuration for '.$editor);
         }
 
         return static::SUCCESS;

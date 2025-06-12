@@ -18,6 +18,11 @@ Publish the config file with:
 php artisan vendor:publish --tag="croft-config"
 ```
 
+Add to your IDE:
+```bash
+php artisan croft:install
+```
+
 Add more functionality with [usecroft.com »](https://usecroft.com) hosted servers (coming soon)
 
 ## Usage
