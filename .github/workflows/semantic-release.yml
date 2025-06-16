@@ -28,8 +28,7 @@ jobs:
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH }} # Optional: for private packages
-          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }} # Set this secret for Packagist auto-publish
+          PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
         run: |
           npx semantic-release
 
