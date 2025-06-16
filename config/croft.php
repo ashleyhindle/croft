@@ -1,7 +1,12 @@
 <?php
 
 return [
-    'resources' => [],
+    'prompts' => [
+        \Croft\Prompts\CroftPrompt::class,
+    ],
+    'resources' => [
+        \Croft\Resources\ListPackages::class,
+    ],
     'tools' => [
         \Croft\Tools\CreateCroftTool::class,
         \Croft\Tools\CreateCroftResource::class,

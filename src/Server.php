@@ -436,10 +436,13 @@ class Server
                 'resources/list' => $this->handleResourcesList($id, $params),
                 'resources/read' => $this->handleResourcesRead($id, $params),
                 'resources/templates/list' => $this->handleResourcesTemplatesList($id, $params),
-                default => throw new ProtocolException(
-                    "Method not found: {$method}",
-                    JsonRpc::METHOD_NOT_FOUND
-                )
+                default => function () use ($method, $id) {
+                    $this->log("Unknown method with ID: '{$id}' and method: '{$method}' WTH");
+                    throw new ProtocolException(
+                        "Method not found: {$method}",
+                        JsonRpc::METHOD_NOT_FOUND
+                    );
+                },
             };
 
             $this->log('Sent response: '.json_encode($response));
@@ -500,7 +503,7 @@ class Server
      */
     private function handleInitialize(string|int $id, array $params): Response
     {
-        $instructions = $this->instructions;
+        $instructions = ''; // TODO: Allow setting of instructions
         $this->log('Received initialization request');
 
         // Extract client capabilities from params
@@ -660,9 +663,8 @@ class Server
 
         try {
             $prompt = $this->promptRegistry->getItem($promptName);
-            $promptContent = $prompt->render($arguments);
 
-            return new Response($id, $promptContent);
+            return new Response($id, $prompt->getResponse($arguments)->toArray());
         } catch (ProtocolException $e) {
             throw $e;
         } catch (\Exception $e) {
@@ -784,6 +786,9 @@ class Server
     public function ping(): void
     {
         $this->log('Ping requested');
+        if (! isset($this->transport)) {
+            throw new \RuntimeException('Transport not initialized');
+        }
 
         // Avoid sending a new ping if one is already pending
         if ($this->pendingPingId !== null) {
@@ -852,7 +857,9 @@ class Server
      */
     private function log(string $message): void
     {
-        fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        if ($this->debug) {
+            fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        }
     }
 
     /**
