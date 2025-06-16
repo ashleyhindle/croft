@@ -6,17 +6,6 @@
     ["@semantic-release/changelog", {
       "changelogFile": "CHANGELOG.md"
     }],
-    ["semantic-release-composer", {
-      "composerFile": "composer.json",
-      "packageRoot": ".",
-      "publish": true,
-      "packagistUrl": "https://packagist.org",
-      "packagistTokenEnv": "PACKAGIST_TOKEN"
-    }],
-    ["@semantic-release/git", {
-      "assets": ["composer.json", "CHANGELOG.md", "composer.lock"],
-      "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-    }],
     ["@semantic-release/github"]
   ]
 }
