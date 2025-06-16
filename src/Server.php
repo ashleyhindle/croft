@@ -436,13 +436,10 @@ class Server
                 'resources/list' => $this->handleResourcesList($id, $params),
                 'resources/read' => $this->handleResourcesRead($id, $params),
                 'resources/templates/list' => $this->handleResourcesTemplatesList($id, $params),
-                default => function () use ($method, $id) {
-                    $this->log("Unknown method with ID: '{$id}' and method: '{$method}' WTH");
-                    throw new ProtocolException(
-                        "Method not found: {$method}",
-                        JsonRpc::METHOD_NOT_FOUND
-                    );
-                },
+                default => throw new ProtocolException(
+                    "Method not found: {$method}",
+                    JsonRpc::METHOD_NOT_FOUND
+                )
             };
 
             $this->log('Sent response: '.json_encode($response));
