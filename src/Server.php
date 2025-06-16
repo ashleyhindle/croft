@@ -500,7 +500,7 @@ class Server
      */
     private function handleInitialize(string|int $id, array $params): Response
     {
-        $instructions = ''; // TODO: Allow setting of instructions
+        $instructions = $this->instructions;
         $this->log('Received initialization request');
 
         // Extract client capabilities from params
