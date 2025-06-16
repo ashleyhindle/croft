@@ -28,6 +28,11 @@ class CroftCommand extends Command
             $server->resource(new $resource);
         }
 
+        $prompts = config('croft.prompts');
+        foreach ($prompts as $prompt) {
+            $server->prompt(new $prompt);
+        }
+
         $server->run();
 
         return self::SUCCESS;

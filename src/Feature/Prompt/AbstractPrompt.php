@@ -11,6 +11,17 @@ namespace Croft\Feature\Prompt;
  */
 abstract class AbstractPrompt
 {
+    private array $arguments = [];
+
+    public function arguments(?array $arguments = null): array
+    {
+        if ($arguments) {
+            $this->arguments = $arguments;
+        }
+
+        return $this->arguments;
+    }
+
     /**
      * Get the unique name of this prompt
      *
@@ -34,11 +45,12 @@ abstract class AbstractPrompt
      */
     abstract public function getSchema(): array;
 
-    /**
-     * Render the prompt with the given arguments
-     *
-     * @param  array  $arguments  The arguments to use for rendering
-     * @return array The rendered prompt content
-     */
-    abstract public function render(array $arguments): array;
+    abstract public function getMessage(array $arguments): string;
+
+    public function getResponse(array $arguments): PromptResponse
+    {
+        $this->arguments($arguments);
+
+        return PromptResponse::text($this);
+    }
 }

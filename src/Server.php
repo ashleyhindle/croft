@@ -660,9 +660,8 @@ class Server
 
         try {
             $prompt = $this->promptRegistry->getItem($promptName);
-            $promptContent = $prompt->render($arguments);
 
-            return new Response($id, $promptContent);
+            return new Response($id, $prompt->getResponse($arguments)->toArray());
         } catch (ProtocolException $e) {
             throw $e;
         } catch (\Exception $e) {
@@ -852,7 +851,9 @@ class Server
      */
     private function log(string $message): void
     {
-        fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        if ($this->debug) {
+            fwrite(STDERR, sprintf('[%s] %s', date('Y-m-d H:i:s'), $message).PHP_EOL);
+        }
     }
 
     /**
