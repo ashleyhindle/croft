@@ -127,8 +127,14 @@ After adding a tool you'll need to restart the server, or ask the MCP client to 
 
 ## Support & Credits
 
-This was developed by Ashley Hindle. If you like it, please star it, share it, and let me know!
+Croft was developed by [Ashley Hindle](https://ashleyhindle.com) with support from [Springloaded](https://springloaded.co). If you like it, please star it, share it, and let us know!
 
-- [Bluesky](https://bsky.app/profile/ashleyhindle.com)
-- [Twitter](https://twitter.com/ashleyhindle)
-- Website [https://ashleyhindle.com](https://ashleyhindle.com)
+**Ashley Hindle**
+- https://bsky.app/profile/ashleyhindle.com
+- https://twitter.com/ashleyhindle
+- https://ashleyhindle.com
+
+**Springloaded**
+- https://bsky.app/profile/springloaded.co
+- https://twitter.com/ashleyhindle
+- https://springloaded.co
