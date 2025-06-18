@@ -12,5 +12,6 @@ function getEditorChoices(): array
     if (laravel_version_compare('11.20', '<=')) {
         $choices = array_merge($choices, ['cursor', 'phpstorm', 'windsurf']);
     }
+
     return $choices;
 }
