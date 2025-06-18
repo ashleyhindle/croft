@@ -6,5 +6,5 @@ uses(TestCase::class)->in(__DIR__);
 
 function getEditorChoices(): array
 {
-    return ['cursor' => 'Cursor', 'windsurf' => 'Windsurf', 'phpstorm' => 'PhpStorm (coming soon)'];
+    return ['cursor' => 'Cursor', 'windsurf' => 'Windsurf', 'phpstorm' => 'PhpStorm (coming soon)', 'cursor', 'phpstorm', 'windsurf'];
 }

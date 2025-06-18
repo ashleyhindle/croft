@@ -6,9 +6,14 @@ use PHPUnit\Framework\Attributes\Test;
 beforeEach(function () {
     // Clean up created directories and files after each test
     File::delete(base_path('.cursor/mcp.json'));
+    $dir = base_path('.cursor');
 
-    if (file_exists(base_path('.cursor'))) {
-        rmdir(base_path('.cursor'));
+    if (file_exists($dir)) {
+        if (is_dir($dir)) {
+            rmdir(base_path('.cursor'));
+        } else {
+            unlink($dir);
+        }
     }
 });
 
