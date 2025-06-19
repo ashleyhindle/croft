@@ -55,6 +55,18 @@ class ScreenshotUrl extends AbstractTool
         ];
     }
 
+    public function shouldRegister(): bool
+    {
+        try {
+            // @phpstan-ignore class.notFound
+            Browsershot::url('https://example.com');
+        } catch (\Throwable $e) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function handle(array $arguments): ToolResponse
     {
         // Check if the suggested package class exists

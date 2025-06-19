@@ -56,6 +56,12 @@ class Server
     // The server instructions to be sent during initialization
     private string $instructions = '';
 
+    /** @var callable|null */
+    private $onRequestCb = null;
+
+    /** @var callable|null */
+    private $onResponseCb = null;
+
     /**
      * @param  string  $name  The server name
      * @param  string  $version  The server version - 1.0.0
@@ -71,6 +77,20 @@ class Server
         $this->resourceTemplateRegistry = new ResourceTemplateRegistry;
         $this->transport = new StdioTransport;
         $this->cache = new Cache;
+    }
+
+    public function onRequest(callable $callback): self
+    {
+        $this->onRequestCb = $callback;
+
+        return $this;
+    }
+
+    public function onResponse(callable $callback): self
+    {
+        $this->onResponseCb = $callback;
+
+        return $this;
     }
 
     /**
@@ -95,6 +115,12 @@ class Server
         if (is_string($tool)) {
             // Handle class name case
             $tool = new $tool;
+        }
+
+        if (! $tool->shouldRegister()) {
+            $this->log('Skipping tool: '.$tool->getName());
+
+            return $this;
         }
 
         $tool->setCache($this->cache);
@@ -410,6 +436,10 @@ class Server
      */
     private function handleRequest(Request $request): void
     {
+        if (! is_null($this->onRequestCb)) {
+            call_user_func($this->onRequestCb, $request);
+        }
+
         $method = $request->getMethod();
         $id = $request->getId();
         $params = $request->getParams() ?? [];
@@ -441,6 +471,12 @@ class Server
                     JsonRpc::METHOD_NOT_FOUND
                 )
             };
+
+            $this->log('Response: '.JsonRpc::stringify($response));
+            if (! is_null($this->onResponseCb)) {
+                $this->log('Calling onResponseCb');
+                call_user_func($this->onResponseCb, $response);
+            }
 
             $this->log('Sent response: '.json_encode($response));
             $this->transport->write(JsonRpc::stringify($response));
@@ -949,5 +985,10 @@ class Server
         }
 
         return $count;
+    }
+
+    public function getToolRegistry(): ToolRegistry
+    {
+        return $this->toolRegistry;
     }
 }
