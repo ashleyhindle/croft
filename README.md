@@ -49,7 +49,6 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 ## Current functionality
 
 - Screenshot URLs
-- InertiaJS docs
 - Query database (read only, or read write)
 - Get absolute URL from relative path
 - Get current date and time

@@ -23,6 +23,15 @@ abstract class AbstractTool
     }
 
     /**
+     * Conditionally register the tool with the client.
+     * For example, if they don't have 'browsershot' installed, don't register a tool requiring it.
+     */
+    public function shouldRegister(): bool
+    {
+        return true;
+    }
+
+    /**
      * Get the name of the tool.
      * This is the identifier used when registering with the server.
      *
