@@ -58,6 +58,7 @@ We recommend you ship an `mcp.json` file with your project in `.cursor/mcp.json`
 - List artisan commands
 - List available config() keys (and optionally values) in dot notation
 - List available env() keys (without leaking secrets of course)
+- Execute `artisan make:*` commands to generate Laravel classes
 
 ## Extra functionality
 
