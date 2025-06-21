@@ -60,12 +60,12 @@ class ArtisanMake extends AbstractTool
         $className = $arguments['name'];
         $options = (array) ($arguments['options'] ?? []);
 
-        $availableMakeTypes = $this->getAvailableArtisanMakeTypes();
+        $availableArtisanMakeTypes = $this->getAvailableArtisanMakeTypes();
 
-        if (! $availableMakeTypes->contains($classType)) {
-            $availableTypesString = $availableMakeTypes->implode(', ');
+        if (! $availableArtisanMakeTypes->contains($classType)) {
+            $availableTypesString = $availableArtisanMakeTypes->implode(', ');
 
-            return ToolResponse::text("Error: Invalid class type '{$classType}'. Available types for artisan make command are: {$availableTypesString}.");
+            return ToolResponse::error("Invalid class type '{$classType}'. Available types for the artisan make command are: {$availableTypesString}.");
         }
 
         $command = "make:{$classType}";
@@ -78,7 +78,7 @@ class ArtisanMake extends AbstractTool
 
             return ToolResponse::text($output);
         } catch (\Exception $e) {
-            return ToolResponse::text('Error executing command: '.$e->getMessage());
+            return ToolResponse::error('Error executing command: '.$e->getMessage());
         }
     }
 
