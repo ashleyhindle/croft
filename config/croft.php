@@ -8,6 +8,7 @@ return [
         \Croft\Resources\ListPackages::class,
     ],
     'tools' => [
+        \Croft\Tools\ArtisanMake::class,
         \Croft\Tools\CreateCroftTool::class,
         \Croft\Tools\CreateCroftResource::class,
         \Croft\Tools\ListArtisanCommands::class,
